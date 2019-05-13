@@ -20,6 +20,13 @@
 			margin-top: 12px;
 			max-width: 500px;
 		}
+		
+		#pageSlider {
+			width: 100%;
+			padding: 12px 20px 12px 12px;
+			margin-bottom: 12px;
+			max-width: 500px;
+		}
 
 		#songList {
 			list-style-type: none;
@@ -71,7 +78,8 @@
 	<br>
 	<input type="button" id="prevButton" onclick="prevPage()" value="Prev">
 	<input type="button" id="nextNutton" onclick="nextPage()" value="Next">
-	<p id="pageNum">1</p>
+	<p><span id="pageNum">1</span> / <span id="possiblePages">1</span></p>
+	<input id="pageSlider" type="range" min="1" max="1" step="1" oninput="loadPage(this.value)">
 	<ul id="songList">
 	</ul>
 
@@ -2304,9 +2312,14 @@
 			var numAdded = 0;
 			var curIndex = 0;
 			
+			currentPage = 1
+			possiblePages = Math.ceil(1.0*filteredCount / songsPerPage);
+
 			songListContainer.innerHTML = "";
 			pageNumDisplay.innerHTML = 1;
-			currentPage = 1
+			possiblePagesDisplay.innerHTML = possiblePages;
+			pageSlider.value = 1;
+			pageSlider.max = possiblePages;
 
 			while(numAdded < songsPerPage && curIndex < songData.length){
 				if(songData[curIndex][iFiltered]){
@@ -2318,7 +2331,6 @@
 		}
 		
 		function nextPage(){
-			var possiblePages = Math.ceil(1.0*filteredCount / songsPerPage);
 			if(currentPage == possiblePages ) return;
 			
 			loadPage(currentPage + 1);
@@ -2519,8 +2531,7 @@
 		var iFiltered = 3;
 		var iFav = 4;
 		
-		var currentPage = 1;
-		var songsPerPage = 50;
+
 		var filteredCount = songData.length;
 
 		for (i = 0; i < songData.length; i++) {
@@ -2528,9 +2539,15 @@
 
 			songData[i][iFav] = false;
 		}
+
+		var songsPerPage = 50;
+		var currentPage = 1;
+		var possiblePages = Math.ceil(1.0*filteredCount / songsPerPage);
 		
 		var songListContainer = document.getElementById("songList");
 		var pageNumDisplay = document.getElementById("pageNum");
+		var possiblePagesDisplay = document.getElementById("possiblePages");
+		var pageSlider = document.getElementById("pageSlider");
 
 		var primaryIndex = iSong;
 		var secondaryIndex = iArtist; 
