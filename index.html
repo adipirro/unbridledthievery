@@ -2305,6 +2305,8 @@
 			var curIndex = 0;
 			
 			songListContainer.innerHTML = "";
+			pageNumDisplay.innerHTML = 1;
+			currentPage = 1
 
 			while(numAdded < songsPerPage && curIndex < songData.length){
 				if(songData[curIndex][iFiltered]){
@@ -2494,10 +2496,10 @@
 				if (Math.abs(xDiff) > Math.abs(yDiff) ) { // most significant
 					if (Math.abs(xDiff) > swipeThreshold) {
 						if (xDiff > 0) {
-							prevPage();
+							nextPage();
 						}
 						else {
-							nextPage()
+							prevPage()
 						}
 					}
 				}
