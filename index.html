@@ -2369,14 +2369,15 @@
 			if(songData[songIndex][iFav]){
 				starText = "&#9733";
 			}
-			return "<table>" + 
-					"<tbody>" +
-					"<tr>" + 
-						"<td id='"+songIndex+"' class='favStar' onclick='favSong(this)'>"+starText+"</td>"+
-						"<td>" + songData[songIndex][primaryIndex] + " - " + songData[songIndex][secondaryIndex] + "</td>" + 
-					"</tr>" + 
-					"</tbody>" +
-				   "</table>"
+			return "<span id='"+songIndex+"' class='favStar' onclick='favSong(this)'>"+starText+"</span>" + song[primaryIndex] + " - " + song[secondaryIndex]
+			// return "<table>" + 
+			// 		"<tbody>" +
+			// 		"<tr>" + 
+			// 			"<td id='"+songIndex+"' class='favStar' onclick='favSong(this)'>"+starText+"</td>"+
+			// 			"<td>" + songData[songIndex][primaryIndex] + " - " + songData[songIndex][secondaryIndex] + "</td>" + 
+			// 		"</tr>" + 
+			// 		"</tbody>" +
+			// 	   "</table>"
 		}
 		
 		function addSong(songIndex){
