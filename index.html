@@ -2379,14 +2379,36 @@
 				   "</table>"
 		}
 		
-		function addSong(songIndex){
-			var item = document.createElement("li");
-			item.className = "unFavSong";
-			if(songData[songIndex][iFav]){
-				item.className = "favSong";
+		function updatePage(pageSongs){
+			var currentPage = songListContainer.children;
+			
+			for(var i=0 ; i < pageSongs.length ; i++){
+				var itemAlreadyExists = typeof currentPage[i] !== 'undefined';
+				var songIndex = pageSongs[i];
+
+				var item;
+				if(itemAlreadyExists){
+					item = currentPage[i];
+				}
+				else{
+					item = document.createElement("li");
+				}
+
+				item.className = "unFavSong";
+				if(songData[songIndex][iFav]){
+					item.className = "favSong";
+				}
+
+				item.innerHTML = getSongHTML(songIndex);
+				
+				if(!itemAlreadyExists){
+					songListContainer.appendChild(item);
+				}
 			}
-			item.innerHTML = getSongHTML(songIndex);
-			songListContainer.appendChild(item);
+
+			while(songListContainer.children.length > pageSongs.length){
+				songListContainer.removeChild(songListContainer.lastChild);
+			}
 		}
 		
 		function resetBook(){
@@ -2396,19 +2418,21 @@
 			currentPage = 1
 			possiblePages = Math.ceil(1.0*filteredCount / songsPerPage);
 
-			songListContainer.innerHTML = "";
 			pageNumDisplay.innerHTML = 1;
 			possiblePagesDisplay.innerHTML = possiblePages;
 			pageSlider.value = 1;
 			pageSlider.max = possiblePages;
-
+			
+			var pageSongs = [];
 			while(numAdded < songsPerPage && curIndex < songData.length){
 				if(songData[curIndex][iFiltered]){
-					addSong(curIndex)
+					pageSongs.push(curIndex);
 					numAdded++;
 				}
 				curIndex++;
 			}
+
+			updatePage(pageSongs);
 		}
 		
 		function nextPage(){
@@ -2425,7 +2449,6 @@
 
 		function loadPage(pageNum){
 			pageNum = parseInt(pageNum)
-			songListContainer.innerHTML = ""
 
 			var i = 1;
 			var curIndex = 0;
@@ -2442,14 +2465,17 @@
 				}
 			}
 			
+			var pageSongs = [];
 			var numAdded = 0;
 			while(numAdded < songsPerPage && curIndex < songData.length){
 				if(songData[curIndex][iFiltered]){
-					addSong(curIndex)
+					pageSongs.push(curIndex);
 					numAdded++;
 				}
 				curIndex++;
 			}
+
+			updatePage(pageSongs);
 
 			pageNumDisplay.innerHTML = pageNum;
 			pageSlider.value = pageNum;
@@ -2462,7 +2488,7 @@
 			if(onlyFavorites && !song[iFav]){
 				return false;
 			}
-			
+
 			if(key.startsWith("artist:")){
 				key = key.slice(7)
 				return song[iArtist].toLowerCase().indexOf(key) > -1 
