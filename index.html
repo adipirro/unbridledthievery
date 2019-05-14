@@ -2369,7 +2369,7 @@
 			if(songData[songIndex][iFav]){
 				starText = "&#9733";
 			}
-			return "<span id='"+songIndex+"' class='favStar' onclick='favSong(this)'>"+starText+"</span>" + song[primaryIndex] + " - " + song[secondaryIndex]
+			return "<span id='"+songIndex+"' class='favStar' onclick='favSong(this)'>"+starText+"</span>" + songData[songIndex][primaryIndex] + " - " + songData[songIndex][secondaryIndex]
 			// return "<table>" + 
 			// 		"<tbody>" +
 			// 		"<tr>" + 
