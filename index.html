@@ -31,7 +31,7 @@
 			margin-top: 12px;
 			max-width: 500px;
 		}
-		
+
 		#pageSlider {
 			-webkit-appearance: none;
 			width: 100%;
@@ -44,7 +44,7 @@
 			margin-bottom: 12px;
 			max-width: 500px;
 		}
-		
+
 		#inputContainer {
 			max-width: 500px;
 		}
@@ -89,12 +89,16 @@
 			max-width: 500px;
 		}
 
+		#loadAllButton {
+			margin-top: 5px;
+		}
+
 		/* #songList2 {
 			list-style-type: none;
 			padding: 0;
 			max-width: 500px;
 		} */
-		
+
 		.favStar {
 			padding-right: 10px;
 		}
@@ -138,10 +142,10 @@
 			<table id="optionsTable">
 				<tbody>
 					<tr>
-						<td>	
+						<td>
 							<input class="button" type="button" id="sortButton" onclick="sortData()" value="Sort By Song">
 						</td>
-						<td>	
+						<td>
 							<input class="button" type="button" id="onlyFavButton" onclick="filterFavorites()" value="Favs Only">
 						</td>
 					</tr>
@@ -202,10 +206,11 @@
 				</table>
 			</li>
 		</ul> -->
-		<ul id="songList">
+		<ul id="songList"></ul>
+		<input class="button" type="button" id="loadAllButton" onclick="loadAll()" value="Load All">
 	</div>
-	
-	
+
+
 	</ul>
 
 	<script>
@@ -2415,7 +2420,7 @@
 [2202, "ZZ Top", "Gimme All Your Lovin'", "4:07", "2", "1", "4", "1", "1", "3", "Rock", "Eliminator", "1", "1983", "Masc."],
 [2203, "ZZ Top", "Sharp Dressed Man", "4:15", "2", "2", "4", "2", "2", "3", "Rock", "Eliminator", "3", "1983", "Masc."],
 [2204, "ZZ Top", "Got Me Under Pressure", "3:55", "4", "3", "4", "2", "2", "2", "Rock", "Eliminator", "2", "1983", "Masc."]];
-		
+
 		function getSongDetailedHTML(songIndex){
 			var starText = "&#9734";
 			if(songData[songIndex][iFav]){
@@ -2480,16 +2485,16 @@
 
 		function getSongHTML(songIndex){
 			return songData[songIndex][primaryIndex] + " - " + songData[songIndex][secondaryIndex]
-			// return "<table>" + 
+			// return "<table>" +
 			// 		"<tbody>" +
-			// 		"<tr>" + 
+			// 		"<tr>" +
 			// 			"<td id='"+songIndex+"' class='favStar' onclick='favSong(this)'>"+starText+"</td>"+
-			// 			"<td>" + songData[songIndex][primaryIndex] + " - " + songData[songIndex][secondaryIndex] + "</td>" + 
-			// 		"</tr>" + 
+			// 			"<td>" + songData[songIndex][primaryIndex] + " - " + songData[songIndex][secondaryIndex] + "</td>" +
+			// 		"</tr>" +
 			// 		"</tbody>" +
 			// 	   "</table>"
 		}
-		
+
 		function addSong(songIndex){
 			var item = document.createElement("li");
 			item.className = "unFavSong";
@@ -2497,20 +2502,57 @@
 				item.className = "favSong";
 			}
 			item.innerHTML = getSongHTML(songIndex);
-			item.onclick = function() { 
+			item.onclick = function() {
 				if(item.lastChild.tagName == "TABLE"){
 					item.innerHTML = getSongHTML(songIndex);
 				}else{
 					item.innerHTML = getSongDetailedHTML(songIndex);
-				}				
+				}
 			};
 			songListContainer.appendChild(item);
 		}
-		
+
+		function loadAll(){
+			var numAdded = 0;
+			var curIndex = 0;
+
+			currentPage = 1
+			possiblePages = 1;
+
+			songListContainer.innerHTML = "";
+			pageNumDisplay.innerHTML = 1;
+			possiblePagesDisplay.innerHTML = possiblePages;
+			pageSlider.value = 1;
+			pageSlider.max = possiblePages;
+
+			// while(curIndex < songData.length){
+			// 	if(songData[curIndex][iFiltered]){
+			// 		addSong(curIndex);
+			// 	}
+			// 	curIndex++;
+			// }
+			var intervalID = setInterval(function(){
+				numAdded = 0;
+				while(curIndex < songData.length && numAdded < 10){
+					if(songData[curIndex][iFiltered]){
+						addSong(curIndex);
+						numAdded++;
+					}
+					curIndex++;
+				}
+				if(curIndex >= songData.length){
+					clearInterval(intervalID);
+				}
+			}, 60);
+
+			var loadAllButton = document.getElementById("loadAllButton");
+			loadAllButton.style.display = "none";
+		}
+
 		function resetBook(){
 			var numAdded = 0;
 			var curIndex = 0;
-			
+
 			currentPage = 1
 			possiblePages = Math.ceil(1.0*filteredCount / songsPerPage);
 
@@ -2519,6 +2561,9 @@
 			possiblePagesDisplay.innerHTML = possiblePages;
 			pageSlider.value = 1;
 			pageSlider.max = possiblePages;
+			
+			var loadAllButton = document.getElementById("loadAllButton");
+			loadAllButton.style.display = "block";
 
 			while(numAdded < songsPerPage && curIndex < songData.length){
 				if(songData[curIndex][iFiltered]){
@@ -2528,16 +2573,16 @@
 				curIndex++;
 			}
 		}
-		
+
 		function nextPage(){
 			if(currentPage == possiblePages ) return;
-			
+
 			loadPage(currentPage + 1);
 		}
 
 		function prevPage(){
 			if(currentPage == 1) return;
-			
+
 			loadPage(currentPage - 1);
 		}
 
@@ -2559,7 +2604,7 @@
 					i++;
 				}
 			}
-			
+
 			var numAdded = 0;
 			while(numAdded < songsPerPage && curIndex < songData.length){
 				if(songData[curIndex][iFiltered]){
@@ -2573,32 +2618,32 @@
 			pageSlider.value = pageNum;
 			currentPage = pageNum;
 		}
-		
+
 		//true - match
 		//false - no match
 		function isFiltered(song, key){
 			if(onlyFavorites && !song[iFav]){
 				return false;
 			}
-			
+
 			if(key.startsWith("artist:")){
 				key = key.slice(7)
-				return song[iArtist].toLowerCase().indexOf(key) > -1 
+				return song[iArtist].toLowerCase().indexOf(key) > -1
 			}
 			if(key.startsWith("song:")){
 				key = key.slice(5)
-				return song[iSong].toLowerCase().indexOf(key) > -1 
+				return song[iSong].toLowerCase().indexOf(key) > -1
 			}
 			return songData[i][iArtist].toLowerCase().indexOf(key) > -1 || songData[i][iSong].toLowerCase().indexOf(key) > -1
 
 		}
-		
+
 		function filterFunction() {
 			filteredCount = 0;
 
 			var input = document.getElementById("searchInput");
 			var key = input.value.toLowerCase();
-			
+
 			for (i = 0; i < songData.length; i++) {
 				if (isFiltered(songData[i], key)) {
 					songData[i][iFiltered] = true;
@@ -2623,7 +2668,7 @@
 
 			filterFunction();
 		}
-		
+
 		function sortData(){
 			var temp = primaryIndex;
 			primaryIndex = secondaryIndex;
@@ -2637,7 +2682,7 @@
 				var xSec = x[secondaryIndex].toLowerCase();
 				if (xSec.startsWith("the ")) xSec = xSec.slice(4);
 				var ySec = y[secondaryIndex].toLowerCase();
-				if (ySec.startsWith("the ")) ySec = ySec.slice(4);	
+				if (ySec.startsWith("the ")) ySec = ySec.slice(4);
 
 				if(xPri < yPri){
 					return -1;
@@ -2651,10 +2696,10 @@
 				else if (xSec > ySec){
 					return 1;
 				}
-				
+
 				return 0;
 			});
-			
+
 			var button = document.getElementById("sortButton");
 			if(primaryIndex == iArtist){
 				button.value = "Sort By Song"
@@ -2676,7 +2721,7 @@
 
 			var songId = songData[dataIndex][iId];
 			songData[dataIndex][iFav] = !songData[dataIndex][iFav];
-			
+
 			if(songData[dataIndex][iFav]){
 				favListNode.className = "favSong";
 				if(!favList.includes(songId)) favList.push(songId);
@@ -2686,9 +2731,9 @@
 				var index = favList.indexOf(songId);
 				if(index != -1) favList.splice(index, 1);
 			}
-			
+
 			favListNode.innerHTML = getSongHTML(dataIndex);
-			
+
 			localStorage.setItem("favList", JSON.stringify(favList));
 		}
 
@@ -2708,7 +2753,7 @@
 			xDiff = xDown - e.touches[0].clientX;
 			yDiff = yDown - e.touches[0].clientY;
 		}
-		
+
 		function handleTouchEnd(e){
 			// if the user released on a different target, cancel!
 			if (startEl !== e.target) return;
@@ -2757,7 +2802,7 @@
 		var iFav = 16;
 
 		var onlyFavorites = false;
-		
+
 		//Get favlist from localstorage
 		var favList = localStorage.getItem("favList");
 		if(favList === null){
@@ -2766,7 +2811,7 @@
 		else{
 			favList = JSON.parse(favList);
 		}
-		
+
 		//Invalidate the fav list if necessary
 		var favListVersion = "beta2";
 		var storedFavListVersion = localStorage.getItem("favListVersion");
@@ -2782,7 +2827,7 @@
 
 		for (i = 0; i < songData.length; i++) {
 			songData[i][iFiltered] = true;
-			
+
 			if(favList.includes(songData[i][iId])){
 				songData[i][iFav] = true;
 			}
@@ -2794,14 +2839,14 @@
 		var songsPerPage = 20;
 		var currentPage = 1;
 		var possiblePages = Math.ceil(1.0*filteredCount / songsPerPage);
-		
+
 		var songListContainer = document.getElementById("songList");
 		var pageNumDisplay = document.getElementById("pageNum");
 		var possiblePagesDisplay = document.getElementById("possiblePages");
 		var pageSlider = document.getElementById("pageSlider");
 
 		var primaryIndex = iSong;
-		var secondaryIndex = iArtist; 
+		var secondaryIndex = iArtist;
 
 		var xDown = null;
     	var yDown = null;
@@ -2813,7 +2858,7 @@
 		songListContainer.addEventListener('touchstart', handleTouchStart, false);
     	songListContainer.addEventListener('touchmove', handleTouchMove, false);
     	songListContainer.addEventListener('touchend', handleTouchEnd, false);
-		
+
 		sortData();
 
 	</script>
