@@ -32,19 +32,6 @@
 			max-width: 500px;
 		}
 
-		#pageSlider {
-			-webkit-appearance: none;
-			width: 100%;
-			height: 25px;
-			background: #dfdfdf;
-			outline: none;
-			opacity: 0.7;
-			-webkit-transition: .2s;
-			transition: opacity .2s;
-			margin-bottom: 12px;
-			max-width: 500px;
-		}
-
 		#inputContainer {
 			max-width: 500px;
 		}
@@ -62,11 +49,24 @@
 			margin: 0;
 		}
 
-		#pageSlider:hover {
+		.pageSlider {
+			-webkit-appearance: none;
+			width: 100%;
+			height: 25px;
+			background: #dfdfdf;
+			outline: none;
+			opacity: 0.7;
+			-webkit-transition: .2s;
+			transition: opacity .2s;
+			margin-bottom: 12px;
+			max-width: 500px;
+		}
+
+		.pageSlider:hover {
 			opacity: 1;
 		}
 
-		#pageSlider::-webkit-slider-thumb {
+		.pageSlider::-webkit-slider-thumb {
 			-webkit-appearance: none;
 			appearance: none;
 			width: 25px;
@@ -75,7 +75,7 @@
 			cursor: pointer;
 		}
 
-		#pageSlider::-moz-range-thumb {
+		.pageSlider::-moz-range-thumb {
 			width: 25px;
 			height: 25px;
 			background: #7190f7;
@@ -87,10 +87,6 @@
 			padding: 0;
 			margin: 0;
 			max-width: 500px;
-		}
-
-		#loadAllButton {
-			margin-top: 5px;
 		}
 
 		/* #songList2 {
@@ -158,8 +154,18 @@
 	</div>
 
 	<div id="bookContainer">
-		<p><span id="pageNum">1</span> / <span id="possiblePages">1</span></p>
-		<input id="pageSlider" type="range" min="1" max="1" step="1" oninput="loadPage(this.value)">
+		<div name="controlsDiv">
+			<br>
+			<br>
+			<span name="pageNum">1</span> / <span name="possiblePages">1</span>
+			<input class="button" type="button" name="prevButton"onclick="prevPage()" value="Prev">
+			<input class="button" type="button" name="nextButton"onclick="nextPage()" value="Next">
+			<input class="button" type="button" name="loadAllButton" onclick="loadAll()" value="Load All">
+			<br>		
+			<input name="pageSlider" class="pageSlider" type="range" min="1" max="1" step="1" oninput="loadPage(this.value)">
+		</div>
+		
+
 		<!-- <ul id="songList2">
 			<li class="unFavSong">
 				<span id="'+songIndex+'" style="font-size: 35px" onclick="favSong(this)">&#9734</span>
@@ -207,7 +213,16 @@
 			</li>
 		</ul> -->
 		<ul id="songList"></ul>
-		<input class="button" type="button" id="loadAllButton" onclick="loadAll()" value="Load All">
+
+		<div name="controlsDiv">
+			<br>
+			<input name="pageSlider" class="pageSlider" type="range" min="1" max="1" step="1" oninput="loadPage(this.value)">
+			<span name="pageNum">1</span> / <span name="possiblePages">1</span>
+			<input class="button" type="button" onclick="prevPage()" value="Prev">
+			<input class="button" type="button" onclick="nextPage()" value="Next">
+			<input class="button" type="button" name="loadAllButton" onclick="loadAll()" value="Load All">
+		</div>		
+
 	</div>
 
 
@@ -2520,17 +2535,11 @@
 			possiblePages = 1;
 
 			songListContainer.innerHTML = "";
-			pageNumDisplay.innerHTML = 1;
-			possiblePagesDisplay.innerHTML = possiblePages;
-			pageSlider.value = 1;
-			pageSlider.max = possiblePages;
+			var pageControls = document.getElementsByName("controlsDiv");
+			pageControls.forEach(function(element) {
+				element.style.display = "none";
+			});
 
-			// while(curIndex < songData.length){
-			// 	if(songData[curIndex][iFiltered]){
-			// 		addSong(curIndex);
-			// 	}
-			// 	curIndex++;
-			// }
 			var intervalID = setInterval(function(){
 				numAdded = 0;
 				while(curIndex < songData.length && numAdded < 10){
@@ -2545,8 +2554,6 @@
 				}
 			}, 60);
 
-			var loadAllButton = document.getElementById("loadAllButton");
-			loadAllButton.style.display = "none";
 		}
 
 		function resetBook(){
@@ -2557,13 +2564,12 @@
 			possiblePages = Math.ceil(1.0*filteredCount / songsPerPage);
 
 			songListContainer.innerHTML = "";
-			pageNumDisplay.innerHTML = 1;
-			possiblePagesDisplay.innerHTML = possiblePages;
-			pageSlider.value = 1;
-			pageSlider.max = possiblePages;
-			
-			var loadAllButton = document.getElementById("loadAllButton");
-			loadAllButton.style.display = "block";
+			updatePageControls(1, possiblePages);
+
+			var pageControls = document.getElementsByName("controlsDiv");
+			pageControls.forEach(function(element) {
+				element.style.display = "";
+			});
 
 			while(numAdded < songsPerPage && curIndex < songData.length){
 				if(songData[curIndex][iFiltered]){
@@ -2613,9 +2619,8 @@
 				}
 				curIndex++;
 			}
-
-			pageNumDisplay.innerHTML = pageNum;
-			pageSlider.value = pageNum;
+			
+			updatePageControls(pageNum, possiblePages);
 			currentPage = pageNum;
 		}
 
@@ -2781,6 +2786,25 @@
 			timeDown = null;
 		}
 
+		var pageNumDisplays = document.getElementsByName("pageNum");
+		var possiblePagesDisplays = document.getElementsByName("possiblePages");
+		var pageSliders = document.getElementsByName("pageSlider");
+		function updatePageControls(current, max){
+
+			pageNumDisplays.forEach( function(element) {
+				element.innerHTML = current;
+			});
+
+			possiblePagesDisplays.forEach( function(element) {
+				element.innerHTML = max;
+			});
+
+			pageSliders.forEach( function(element) {
+				element.value = current;
+				element.max = max;
+			});
+		}
+
 		//main
 
 		var iId = 0;
@@ -2841,9 +2865,6 @@
 		var possiblePages = Math.ceil(1.0*filteredCount / songsPerPage);
 
 		var songListContainer = document.getElementById("songList");
-		var pageNumDisplay = document.getElementById("pageNum");
-		var possiblePagesDisplay = document.getElementById("possiblePages");
-		var pageSlider = document.getElementById("pageSlider");
 
 		var primaryIndex = iSong;
 		var secondaryIndex = iArtist;
