@@ -112,7 +112,7 @@
 		.favSong{
 			border: 1px solid #242849;
 			margin-top: -1px; /* Prevent double borders */
-			background-color: #3c49bb;
+			background-color: #929dff;
 			padding: 12px;
 			font-size: 20px;
 			color: black;
@@ -2479,11 +2479,7 @@
 		}
 
 		function getSongHTML(songIndex){
-			var starText = "&#9734";
-			if(songData[songIndex][iFav]){
-				starText = "&#9733";
-			}
-			return "<span id='"+songIndex+"' class='favStar' onclick='favSong(this)'>"+starText+"</span>" + songData[songIndex][primaryIndex] + " - " + songData[songIndex][secondaryIndex]
+			return songData[songIndex][primaryIndex] + " - " + songData[songIndex][secondaryIndex]
 			// return "<table>" + 
 			// 		"<tbody>" +
 			// 		"<tr>" + 
