@@ -22,6 +22,16 @@
 			font-size: 14px;
 		}
 
+		.resetButton {
+			background-color: rgb(187, 0, 0); /* Green */
+			border: none;
+			color: white;
+			padding: 10px 8px;
+			text-align: center;
+			display: inline-block;
+			font-size: 14px;
+		}
+
 		.progressBar {
 			width: 10%;
 			height: 30px;
@@ -29,6 +39,49 @@
 			text-align: center;
 			line-height: 30px;
 			color: white; 
+		}
+
+		input[type=checkbox] + label {
+			display: block;
+			margin: 0.2em;
+			cursor: pointer;
+			padding: 0.2em;
+		}
+
+		input[type=checkbox] {
+			display: none;
+		}
+
+		input[type=checkbox] + label:before {
+			content: "\2714";
+			background-color: rgb(231, 231, 231);
+			display: inline-block;
+			width: 1em;
+			height: 1em;
+			padding-left: 0.2em;
+			padding-bottom: 0.3em;
+			margin-right: 0.5em;
+			vertical-align: bottom;
+			color: transparent;
+		}
+
+		input[type=checkbox] + label:active:before {
+			transform: scale(0);
+		}
+
+		input[type=checkbox]:checked + label:before {
+			background-color: #929dff;
+			color: #fff;
+		}
+
+		input[type=checkbox]:disabled + label:before {
+			transform: scale(1);
+			background-color: #8a8a8a;
+		}
+
+		input[type=checkbox]:checked:disabled + label:before {
+			transform: scale(1);
+			background-color: #8a8a8a;
 		}
 
 		#searchInput {
@@ -46,6 +99,11 @@
 		#optionsContainer {
 			background: #b3b3b3;
 			text-align: center;
+			padding-bottom: 10px;
+		}
+
+		#optionDetailsContainer {
+			text-align: left;
 		}
 
 		.pageSlider {
@@ -123,18 +181,40 @@
 	<div id="inputContainer" class="pageContainer">
 		<div id="optionsContainer">
 			<h3>Search Options</h3>
-			<table id="optionsTable">
-				<tbody>
-					<tr>
-						<td>
-							<input class="button" type="button" id="sortButton" onclick="sortData()" value="Sort By Song">
-						</td>
-						<td>
-							<input class="button" type="button" id="onlyFavButton" onclick="filterFavorites()" value="Favs Only">
-						</td>
-					</tr>
-				</tbody>
-			</table>
+			<input class="resetButton" type="button" id="resetButton" onClick="window.location.reload();" value="Reset">
+			<br><br>
+			<input class="button" type="button" id="sortButton" onclick="sortData()" value="Sort By Song">
+			<input class="button" type="button" id="onlyFavButton" onclick="filterFavorites()" value="Favs Only">
+			<!-- <input class="button" type="button" id="genreButton" onclick="filterGenre()" value="Genre"> -->
+			<input class="button" type="button" id="lowerDiffButton" onclick="toggleLowerDiffDetail()" value="Lower Diffs">
+			<input class="button" type="button" id="supportedInstrumentsButton" onclick="toggleSupportedInstrumentsDetail()" value="Supported Instruments">
+			<br>
+			<div id="optionDetailsContainer">
+				<div style= "display: none" id="lowerDiffDetails">
+					<h4>Lower Difficulty Type</h4>
+					<input type="checkbox" class="checkbox" onclick="filterFunction()" id="diffAuthored">
+					<label for="diffAuthored">Authored</label>
+					<input type="checkbox" class="checkbox" onclick="filterFunction()" id="diffAuto">
+					<label for="diffAuto">Auto Generated</label>
+					<input type="checkbox" class="checkbox" onclick="filterFunction()" id="diffExpert">
+					<label for="diffExpert">Expert Only</label>
+				</div>
+				<div style= "display: none" id="supportedInstrumentsDetails">
+					<h4>Supported Instruments</h4>
+					<input type="checkbox" class="checkbox" onclick="filterFunction()" id="hasGuitar">
+					<label for="hasGuitar">Guitar</label>
+					<input type="checkbox" class="checkbox" onclick="filterFunction()" id="hasBass">
+					<label for="hasBass">Bass</label>
+					<input type="checkbox" class="checkbox" onclick="filterFunction()" id="hasDrums">
+					<label for="hasDrums">Drums</label>
+					<input type="checkbox" class="checkbox" onclick="filterFunction()" id="hasVocals">
+					<label for="hasVocals">Vocals</label>
+					<input type="checkbox" class="checkbox" onclick="filterFunction()" id="hasKeys">
+					<label for="hasKeys">Keys</label>
+					<input type="checkbox" class="checkbox" onclick="filterFunction()" id="hasProKeys">
+					<label for="hasProKeys">Pro Keys</label>
+				</div>
+			</div>
 		</div>
 		<input type="text" id="searchInput" onkeyup="filterFunction()" placeholder="Search...">
 	</div>
@@ -2622,13 +2702,67 @@
 //--------------
 //Filtering
 //--------------
-
-		//true - match
-		//false - no match
-		function isFiltered(song, key){
-			if(onlyFavorites && !song[iFav]){
+		
+		var checkHasGuitar = document.getElementById("hasGuitar");
+		var checkHasBass = document.getElementById("hasBass");
+		var checkHasDrums = document.getElementById("hasDrums");
+		var checkHasVocals = document.getElementById("hasVocals");
+		var checkHasKeys = document.getElementById("hasKeys");
+		var checkHasProKeys = document.getElementById("hasProKeys");
+		function supportedInstrumentCheck(song){
+			if(checkHasGuitar.checked && song[iGuitar] == 0){
 				return false;
 			}
+			if(checkHasBass.checked && song[iBass] == 0){
+				return false;
+			}
+			if(checkHasDrums.checked && song[iDrums] == 0){
+				return false;
+			}
+			if(checkHasVocals.checked && song[iVocals] == 0){
+				return false;
+			}
+			if(checkHasKeys.checked && song[iKeys] == 0){
+				return false;
+			}
+			if(checkHasProKeys.checked && song[iProKeys] == 0){
+				return false;
+			}
+			return true;
+		}
+
+		var autoKeyword = "(Auto)";
+		var expertKeyword = "(Expert)";
+		var checkDiffAuthored = document.getElementById("diffAuthored");
+		var checkDiffAuto = document.getElementById("diffAuto");
+		var checkDiffExpert = document.getElementById("diffExpert");
+		function lowerDiffCheck(song){
+			//all selected or all unselected (treat the same)
+			if(checkDiffAuthored.checked == checkDiffAuto.checked && checkDiffAuto.checked == checkDiffExpert.checked){
+				return true;
+			}
+
+			var authoredCheck = false;
+			if(checkDiffAuthored.checked){
+				authoredCheck = song[iSong].indexOf(autoKeyword) == -1 && song[iSong].indexOf(expertKeyword) == -1;
+			}
+
+			var autoCheck = false;
+			if(checkDiffAuto.checked){
+				autoCheck = song[iSong].indexOf(autoKeyword) > -1;
+			}
+
+			var expertCheck = false;
+			if(checkDiffExpert.checked){
+				expertCheck = song[iSong].indexOf(expertKeyword) > -1;
+			}
+
+			return authoredCheck || autoCheck || expertCheck;
+		}
+
+		var searchInput = document.getElementById("searchInput");
+		function searchKeyCheck(song){
+			var key = searchInput.value.toLowerCase();
 
 			if(key.startsWith("artist:")){
 				key = key.slice(7)
@@ -2639,17 +2773,24 @@
 				return song[iSong].toLowerCase().indexOf(key) > -1
 			}
 
-			return songData[i][iArtist].toLowerCase().indexOf(key) > -1 || songData[i][iSong].toLowerCase().indexOf(key) > -1
+			return song[iArtist].toLowerCase().indexOf(key) > -1 || song[iSong].toLowerCase().indexOf(key) > -1;
+		}
+
+		//true - match
+		//false - no match
+		function isFiltered(song){
+			if(onlyFavorites && !song[iFav]){
+				return false;
+			}
+
+			return searchKeyCheck(song) && lowerDiffCheck(song) && supportedInstrumentCheck(song);
 		}
 
 		function filterFunction() {
 			filteredCount = 0;
 
-			var input = document.getElementById("searchInput");
-			var key = input.value.toLowerCase();
-
 			for (i = 0; i < songData.length; i++) {
-				if (isFiltered(songData[i], key)) {
+				if (isFiltered(songData[i])) {
 					songData[i][iFiltered] = true;
 					filteredCount++;
 				} else {
@@ -2672,6 +2813,24 @@
 			favButton.value = buttonText;
 
 			filterFunction();
+		}
+		
+		function toggleLowerDiffDetail(){
+			var lowerDiffDetails = document.getElementById("lowerDiffDetails");
+			if(lowerDiffDetails.style.display == "none"){
+				lowerDiffDetails.style.display = "";
+			}else{
+				lowerDiffDetails.style.display = "none";
+			}
+		}
+
+		function toggleSupportedInstrumentsDetail(){
+			var supportedInstrumentsDetails = document.getElementById("supportedInstrumentsDetails");
+			if(supportedInstrumentsDetails.style.display == "none"){
+				supportedInstrumentsDetails.style.display = "";
+			}else{
+				supportedInstrumentsDetails.style.display = "none";
+			}
 		}
 
 //--------------
