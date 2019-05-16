@@ -22,6 +22,15 @@
 			font-size: 14px;
 		}
 
+		.progressBar {
+			width: 10%;
+			height: 30px;
+			background-color: rgb(102, 104, 180);
+			text-align: center;
+			line-height: 30px;
+			color: white; 
+		}
+
 		#searchInput {
 			width: 100%;
 			font-size: 16px;
@@ -2480,6 +2489,7 @@
 
 		function loadAll(){
 			var numAdded = 0;
+			var intervalAddCount = 0;
 			var curIndex = 0;
 
 			currentPage = 1
@@ -2490,20 +2500,33 @@
 			pageControls.forEach(function(element) {
 				element.style.display = "none";
 			});
+			
+			var progressBarOuter = document.createElement("div");
+			var progressBarInner = document.createElement("div");
+			progressBarInner.className = "progressBar";
+			progressBarInner.style.width = "0%";
+			progressBarOuter.appendChild(progressBarInner);
+			songListContainer.appendChild(progressBarOuter);
 
 			var intervalID = setInterval(function(){
-				numAdded = 0;
-				while(curIndex < songData.length && numAdded < 10){
+				intervalAddCount = 0;
+				while(curIndex < songData.length && intervalAddCount < 10){
 					if(songData[curIndex][iFiltered]){
 						addSong(curIndex);
 						numAdded++;
+						intervalAddCount++;
 					}
 					curIndex++;
 				}
+
+				var progressPercent = 100 * (numAdded / filteredCount);
+				progressBarInner.style.width = progressPercent + "%";
+				progressBarInner.innerHTML = Math.ceil(progressPercent) + "%";
+
 				if(curIndex >= songData.length){
 					clearInterval(intervalID);
 				}
-			}, 60);
+			}, 30);
 
 		}
 
@@ -2732,7 +2755,7 @@
     	var yDiff = null;
     	var timeDown = null;
     	var startEl = null;
-		
+
 		function handleTouchStart(e){
 			startEl = e.target;
 
