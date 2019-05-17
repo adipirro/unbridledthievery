@@ -191,9 +191,31 @@
 				<input class="button" type="button" id="onlyFavButton" onclick="filterFavorites()" value="Favs Only">
 				<input class="button" type="button" id="genreButton" onclick="toggleGenreDetail()" value="Genre">
 				<input class="button" type="button" id="lowerDiffButton" onclick="toggleLowerDiffDetail()" value="Lower Diffs">
+				<input class="button" type="button" id="releaseDateButton" onclick="toggleReleaseDateDetail()" value="Release Date">
 				<input class="button" type="button" id="supportedInstrumentsButton" onclick="toggleSupportedInstrumentsDetail()" value="Supported Instruments">
 				<br>
 				<div id="optionDetailsContainer">
+					<div style= "display: none" id="releaseDateDetails">
+						<h3>Release Date</h3>
+						<input type="checkbox" class="checkbox" onclick="selectAllReleaseDates()" id="selectAllReleaseDates" checked>
+						<label for="selectAllReleaseDates"><b>Select All</b></label>
+						<input type="checkbox" class="checkbox" onclick="filterFunction()" id="dateEarlier" checked>
+						<label for="dateEarlier">Earlier</label>
+						<input type="checkbox" class="checkbox" onclick="filterFunction()" id="date1950" checked>
+						<label for="date1950">1950s</label>
+						<input type="checkbox" class="checkbox" onclick="filterFunction()" id="date1960" checked>
+						<label for="date1960">1960s</label>
+						<input type="checkbox" class="checkbox" onclick="filterFunction()" id="date1970" checked>
+						<label for="date1970">1970s</label>
+						<input type="checkbox" class="checkbox" onclick="filterFunction()" id="date1980" checked>
+						<label for="date1980">1980s</label>
+						<input type="checkbox" class="checkbox" onclick="filterFunction()" id="date1990" checked>
+						<label for="date1990">1990s</label>
+						<input type="checkbox" class="checkbox" onclick="filterFunction()" id="date2000" checked>
+						<label for="date2000">2000s</label>
+						<input type="checkbox" class="checkbox" onclick="filterFunction()" id="date2010" checked>
+						<label for="date2010">2010+</label>
+					</div>
 					<div style= "display: none" id="lowerDiffDetails">
 						<h3>Lower Difficulty Type</h3>
 						<input type="checkbox" class="checkbox" onclick="filterFunction()" id="diffAuthored">
@@ -2713,6 +2735,45 @@
 //Filtering
 //--------------
 		
+		var checkDateEarlier = document.getElementById("dateEarlier");
+		var checkDate1950 = document.getElementById("date1950");
+		var checkDate1960 = document.getElementById("date1960");
+		var checkDate1970 = document.getElementById("date1970");
+		var checkDate1980 = document.getElementById("date1980");
+		var checkDate1990 = document.getElementById("date1990");
+		var checkDate2000 = document.getElementById("date2000");
+		var checkDate2010 = document.getElementById("date2010");
+		function releaseDateCheck(song){
+			var songReleaseInt = parseInt(song[iYearReleased]);
+			if(!checkDateEarlier.checked && songReleaseInt < 1950){
+				return false;
+			}
+			if(!checkDate2010.checked && songReleaseInt >= 2010){
+				return false;
+			}
+
+			if(!checkDate1950.checked && song[iYearReleased].startsWith("195")){
+				return false;
+			}
+			if(!checkDate1960.checked && song[iYearReleased].startsWith("196")){
+				return false;
+			}
+			if(!checkDate1970.checked && song[iYearReleased].startsWith("197")){
+				return false;
+			}
+			if(!checkDate1980.checked && song[iYearReleased].startsWith("198")){
+				return false;
+			}
+			if(!checkDate1990.checked && song[iYearReleased].startsWith("199")){
+				return false;
+			}
+			if(!checkDate2000.checked && song[iYearReleased].startsWith("200")){
+				return false;
+			}
+
+			return true;
+		}
+
 		function genreCheck(song){
 			var checkedGenres = genreDetails.getElementsByTagName("input");
 			for(var i=1; i<checkedGenres.length; i++){
@@ -2809,7 +2870,7 @@
 				return false;
 			}
 
-			return searchKeyCheck(song) && lowerDiffCheck(song) && supportedInstrumentCheck(song) && genreCheck(song);
+			return searchKeyCheck(song) && lowerDiffCheck(song) && supportedInstrumentCheck(song) && genreCheck(song) && releaseDateCheck(song);
 		}
 
 		function filterFunction() {
@@ -2841,11 +2902,21 @@
 			filterFunction();
 		}
 		
+		function selectAllReleaseDates(){
+			var releaseDateDetails = document.getElementById("releaseDateDetails");
+			var checkedDates = releaseDateDetails.getElementsByTagName("input");
+			for(var i=1; i<checkedDates.length; i++){
+				checkedDates[i].checked = checkedDates[0].checked;
+			}
+			filterFunction();
+		}
+
 		function selectAllGenres(){
 			var checkedGenres = genreDetails.getElementsByTagName("input");
 			for(var i=1; i<checkedGenres.length; i++){
 				checkedGenres[i].checked = checkedGenres[0].checked;
 			}
+			filterFunction();
 		}
 
 		function toggleElement(element){
@@ -2860,6 +2931,10 @@
 			toggleElement(document.getElementById("toggleOptionsContainer"));
 		}
 		
+		function toggleReleaseDateDetail(){
+			toggleElement(document.getElementById("releaseDateDetails"));
+		}
+
 		function toggleGenreDetail(){
 			toggleElement(document.getElementById("genreDetails"));
 		}
