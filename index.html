@@ -24,9 +24,9 @@
 		}
 
 		.resetButton {
-			background-color: rgb(187, 0, 0); /* Green */
+			background-color: rgb(155, 1, 1); /* Green */
 			border: none;
-			color: white;
+			color: rgb(255, 255, 255);
 			padding: 10px 8px;
 			margin: 5px;
 			text-align: center;
@@ -187,13 +187,13 @@
 			<br>
 			<input class="button" type="button" id="sortButton" onclick="sortData()" value="Sort By Song">
 			<input class="button" type="button" id="onlyFavButton" onclick="filterFavorites()" value="Favs Only">
-			<!-- <input class="button" type="button" id="genreButton" onclick="filterGenre()" value="Genre"> -->
+			<input class="button" type="button" id="genreButton" onclick="toggleGenreDetail()" value="Genre">
 			<input class="button" type="button" id="lowerDiffButton" onclick="toggleLowerDiffDetail()" value="Lower Diffs">
 			<input class="button" type="button" id="supportedInstrumentsButton" onclick="toggleSupportedInstrumentsDetail()" value="Supported Instruments">
 			<br>
 			<div id="optionDetailsContainer">
 				<div style= "display: none" id="lowerDiffDetails">
-					<h4>Lower Difficulty Type</h4>
+					<h3>Lower Difficulty Type</h3>
 					<input type="checkbox" class="checkbox" onclick="filterFunction()" id="diffAuthored">
 					<label for="diffAuthored">Authored</label>
 					<input type="checkbox" class="checkbox" onclick="filterFunction()" id="diffAuto">
@@ -202,7 +202,7 @@
 					<label for="diffExpert">Expert Only</label>
 				</div>
 				<div style= "display: none" id="supportedInstrumentsDetails">
-					<h4>Supported Instruments</h4>
+					<h3>Supported Instruments</h3>
 					<input type="checkbox" class="checkbox" onclick="filterFunction()" id="hasGuitar">
 					<label for="hasGuitar">Guitar</label>
 					<input type="checkbox" class="checkbox" onclick="filterFunction()" id="hasBass">
@@ -215,6 +215,11 @@
 					<label for="hasKeys">Keys</label>
 					<input type="checkbox" class="checkbox" onclick="filterFunction()" id="hasProKeys">
 					<label for="hasProKeys">Pro Keys</label>
+				</div>
+				<div style= "display: none" id="genreDetails">
+					<h3>Genre</h3>
+					<input type="checkbox" class="checkbox" onclick="selectAllGenres()" id="selectAllGenres" checked>
+					<label for="selectAllGenres"><b>Select All</b></label>
 				</div>
 			</div>
 		</div>
@@ -2705,6 +2710,18 @@
 //Filtering
 //--------------
 		
+		function genreCheck(song){
+			var checkedGenres = genreDetails.getElementsByTagName("input");
+			for(var i=1; i<checkedGenres.length; i++){
+				if(!checkedGenres[i].checked){
+					if(song[iGenre] == availableGenres[i-1]){
+						return false;
+					}
+				}
+			}
+			return true;
+		}
+
 		var checkHasGuitar = document.getElementById("hasGuitar");
 		var checkHasBass = document.getElementById("hasBass");
 		var checkHasDrums = document.getElementById("hasDrums");
@@ -2789,7 +2806,7 @@
 				return false;
 			}
 
-			return searchKeyCheck(song) && lowerDiffCheck(song) && supportedInstrumentCheck(song);
+			return searchKeyCheck(song) && lowerDiffCheck(song) && supportedInstrumentCheck(song) && genreCheck(song);
 		}
 
 		function filterFunction() {
@@ -2821,22 +2838,31 @@
 			filterFunction();
 		}
 		
-		function toggleLowerDiffDetail(){
-			var lowerDiffDetails = document.getElementById("lowerDiffDetails");
-			if(lowerDiffDetails.style.display == "none"){
-				lowerDiffDetails.style.display = "";
-			}else{
-				lowerDiffDetails.style.display = "none";
+		function selectAllGenres(){
+			var checkedGenres = genreDetails.getElementsByTagName("input");
+			for(var i=1; i<checkedGenres.length; i++){
+				checkedGenres[i].checked = checkedGenres[0].checked;
 			}
 		}
 
-		function toggleSupportedInstrumentsDetail(){
-			var supportedInstrumentsDetails = document.getElementById("supportedInstrumentsDetails");
-			if(supportedInstrumentsDetails.style.display == "none"){
-				supportedInstrumentsDetails.style.display = "";
+		function toggleDetails(element){
+			if(element.style.display == "none"){
+				element.style.display = "";
 			}else{
-				supportedInstrumentsDetails.style.display = "none";
+				element.style.display = "none";
 			}
+		}
+		
+		function toggleGenreDetail(){
+			toggleDetails(document.getElementById("genreDetails"));
+		}
+
+		function toggleLowerDiffDetail(){
+			toggleDetails(document.getElementById("lowerDiffDetails"));
+		}
+
+		function toggleSupportedInstrumentsDetail(){
+			toggleDetails(document.getElementById("supportedInstrumentsDetails"));
 		}
 
 //--------------
@@ -2991,7 +3017,8 @@
 		localStorage.setItem("favListVersion", favListVersion);
 
 		var filteredCount = songData.length;
-		for (i = 0; i < songData.length; i++) {
+		var availableGenres = [];
+		for (var i = 0; i < songData.length; i++) {
 			songData[i][iFiltered] = true;
 
 			if(favList.includes(songData[i][iId])){
@@ -3000,6 +3027,17 @@
 			else{
 				songData[i][iFav] = false;
 			}
+
+			if(availableGenres.indexOf(songData[i][iGenre]) == -1){
+				availableGenres.push(songData[i][iGenre]);
+			}
+		}
+
+		var genreDetails = document.getElementById("genreDetails");
+		availableGenres.sort();
+		for(var i=0; i<availableGenres.length ; i++){
+			genreDetails.innerHTML += '<input type="checkbox" class="checkbox" onclick="filterFunction()" id="genre'+i+'" checked> \
+										<label for="genre'+i+'">'+availableGenres[i]+'</label>';
 		}
 
 		var songsPerPage = 20;
