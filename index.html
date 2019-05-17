@@ -2774,6 +2774,10 @@
 				key = key.slice(5)
 				return song[iSong].toLowerCase().indexOf(key) > -1
 			}
+			if(key.startsWith("album:")){
+				key = key.slice(6)
+				return song[iAlbum].toLowerCase().indexOf(key) > -1
+			}
 
 			return song[iArtist].toLowerCase().indexOf(key) > -1 || song[iSong].toLowerCase().indexOf(key) > -1;
 		}
