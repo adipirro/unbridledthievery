@@ -3035,7 +3035,7 @@
 		
 		function favAllFiltered(){
 			for (i = 0; i < songData.length; i++) {
-				if (songData[i][iFiltered]) {
+				if (songData[i][iFiltered] && songData[i][iId] != 99999999) {
 					songData[i][iFav] = true;
 					addToFavList(i);
 				}
