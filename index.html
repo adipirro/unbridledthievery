@@ -13,7 +13,7 @@
 		}
 
 		.button {
-			background-color: rgb(102, 104, 180); /* Green */
+			background-color: #6668b4; /* Green */
 			border: none;
 			color: white;
 			padding: 10px 8px;
@@ -102,6 +102,7 @@
 			background: #b3b3b3;
 			text-align: center;
 			padding-bottom: 10px;
+			display: "none";
 		}
 
 		#optionDetailsContainer {
@@ -182,44 +183,46 @@
 
 	<div id="inputContainer" class="pageContainer">
 		<div id="optionsContainer">
-			<h3>Search Options</h3>
-			<input class="resetButton" type="button" id="resetButton" onClick="window.location.reload();" value="Reset Filters">
-			<br>
-			<input class="button" type="button" id="sortButton" onclick="sortData()" value="Sort By Song">
-			<input class="button" type="button" id="onlyFavButton" onclick="filterFavorites()" value="Favs Only">
-			<input class="button" type="button" id="genreButton" onclick="toggleGenreDetail()" value="Genre">
-			<input class="button" type="button" id="lowerDiffButton" onclick="toggleLowerDiffDetail()" value="Lower Diffs">
-			<input class="button" type="button" id="supportedInstrumentsButton" onclick="toggleSupportedInstrumentsDetail()" value="Supported Instruments">
-			<br>
-			<div id="optionDetailsContainer">
-				<div style= "display: none" id="lowerDiffDetails">
-					<h3>Lower Difficulty Type</h3>
-					<input type="checkbox" class="checkbox" onclick="filterFunction()" id="diffAuthored">
-					<label for="diffAuthored">Authored</label>
-					<input type="checkbox" class="checkbox" onclick="filterFunction()" id="diffAuto">
-					<label for="diffAuto">Auto Generated</label>
-					<input type="checkbox" class="checkbox" onclick="filterFunction()" id="diffExpert">
-					<label for="diffExpert">Expert Only</label>
-				</div>
-				<div style= "display: none" id="supportedInstrumentsDetails">
-					<h3>Supported Instruments</h3>
-					<input type="checkbox" class="checkbox" onclick="filterFunction()" id="hasGuitar">
-					<label for="hasGuitar">Guitar</label>
-					<input type="checkbox" class="checkbox" onclick="filterFunction()" id="hasBass">
-					<label for="hasBass">Bass</label>
-					<input type="checkbox" class="checkbox" onclick="filterFunction()" id="hasDrums">
-					<label for="hasDrums">Drums</label>
-					<input type="checkbox" class="checkbox" onclick="filterFunction()" id="hasVocals">
-					<label for="hasVocals">Vocals</label>
-					<input type="checkbox" class="checkbox" onclick="filterFunction()" id="hasKeys">
-					<label for="hasKeys">Keys</label>
-					<input type="checkbox" class="checkbox" onclick="filterFunction()" id="hasProKeys">
-					<label for="hasProKeys">Pro Keys</label>
-				</div>
-				<div style= "display: none" id="genreDetails">
-					<h3>Genre</h3>
-					<input type="checkbox" class="checkbox" onclick="selectAllGenres()" id="selectAllGenres" checked>
-					<label for="selectAllGenres"><b>Select All</b></label>
+			<h3 style="background: #6668b4;" onclick="toggleSearchOptions()">Search Options</h3>
+			<div id="toggleOptionsContainer">
+				<input class="resetButton" type="button" id="resetButton" onClick="window.location.reload();" value="Reset Filters">
+				<br>
+				<input class="button" type="button" id="sortButton" onclick="sortData()" value="Sort By Song">
+				<input class="button" type="button" id="onlyFavButton" onclick="filterFavorites()" value="Favs Only">
+				<input class="button" type="button" id="genreButton" onclick="toggleGenreDetail()" value="Genre">
+				<input class="button" type="button" id="lowerDiffButton" onclick="toggleLowerDiffDetail()" value="Lower Diffs">
+				<input class="button" type="button" id="supportedInstrumentsButton" onclick="toggleSupportedInstrumentsDetail()" value="Supported Instruments">
+				<br>
+				<div id="optionDetailsContainer">
+					<div style= "display: none" id="lowerDiffDetails">
+						<h3>Lower Difficulty Type</h3>
+						<input type="checkbox" class="checkbox" onclick="filterFunction()" id="diffAuthored">
+						<label for="diffAuthored">Authored</label>
+						<input type="checkbox" class="checkbox" onclick="filterFunction()" id="diffAuto">
+						<label for="diffAuto">Auto Generated</label>
+						<input type="checkbox" class="checkbox" onclick="filterFunction()" id="diffExpert">
+						<label for="diffExpert">Expert Only</label>
+					</div>
+					<div style= "display: none" id="supportedInstrumentsDetails">
+						<h3>Supported Instruments</h3>
+						<input type="checkbox" class="checkbox" onclick="filterFunction()" id="hasGuitar">
+						<label for="hasGuitar">Guitar</label>
+						<input type="checkbox" class="checkbox" onclick="filterFunction()" id="hasBass">
+						<label for="hasBass">Bass</label>
+						<input type="checkbox" class="checkbox" onclick="filterFunction()" id="hasDrums">
+						<label for="hasDrums">Drums</label>
+						<input type="checkbox" class="checkbox" onclick="filterFunction()" id="hasVocals">
+						<label for="hasVocals">Vocals</label>
+						<input type="checkbox" class="checkbox" onclick="filterFunction()" id="hasKeys">
+						<label for="hasKeys">Keys</label>
+						<input type="checkbox" class="checkbox" onclick="filterFunction()" id="hasProKeys">
+						<label for="hasProKeys">Pro Keys</label>
+					</div>
+					<div style= "display: none" id="genreDetails">
+						<h3>Genre</h3>
+						<input type="checkbox" class="checkbox" onclick="selectAllGenres()" id="selectAllGenres" checked>
+						<label for="selectAllGenres"><b>Select All</b></label>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -2845,24 +2848,28 @@
 			}
 		}
 
-		function toggleDetails(element){
+		function toggleElement(element){
 			if(element.style.display == "none"){
 				element.style.display = "";
 			}else{
 				element.style.display = "none";
 			}
 		}
+
+		function toggleSearchOptions(){
+			toggleElement(document.getElementById("toggleOptionsContainer"));
+		}
 		
 		function toggleGenreDetail(){
-			toggleDetails(document.getElementById("genreDetails"));
+			toggleElement(document.getElementById("genreDetails"));
 		}
 
 		function toggleLowerDiffDetail(){
-			toggleDetails(document.getElementById("lowerDiffDetails"));
+			toggleElement(document.getElementById("lowerDiffDetails"));
 		}
 
 		function toggleSupportedInstrumentsDetail(){
-			toggleDetails(document.getElementById("supportedInstrumentsDetails"));
+			toggleElement(document.getElementById("supportedInstrumentsDetails"));
 		}
 
 //--------------
