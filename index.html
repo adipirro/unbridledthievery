@@ -193,6 +193,7 @@
 				<input class="button" type="button" id="genreButton" onclick="toggleGenreDetail()" value="Genre">
 				<input class="button" type="button" id="lowerDiffButton" onclick="toggleLowerDiffDetail()" value="Lower Diffs">
 				<input class="button" type="button" id="releaseDateButton" onclick="toggleReleaseDateDetail()" value="Release Date">
+				<input class="button" type="button" id="songLengthButton" onclick="toggleSongLengthDetail()" value="Song Length">
 				<input class="button" type="button" id="supportedInstrumentsButton" onclick="toggleSupportedInstrumentsDetail()" value="Supported Instruments">
 				<br>
 				<div id="optionDetailsContainer">
@@ -201,6 +202,13 @@
 						<p>Be Careful! These buttons will operate on ALL results below. Not just the ones on the current page!</p>
 						<input class="dangerButton" type="button" id="favAllButton" onclick="favAllFiltered();" value="Favorite All Filtered">
 						<input class="dangerButton" type="button" id="favAllButton" onclick="unFavAllFiltered();" value="Un-Favorite All Filtered">
+					</div>
+					<div style= "display: none" id="songLengthDetails">
+						<h3>Song Length</h3>
+						<p>Between</p>
+						<input id="lengthMinStart" oninput="filterFunction()" type="number" min="0" max="99" value="0"> min <input id="lengthSecStart" oninput="filterFunction()" type="number" min="0" max="59" value="00"> sec
+						<p>and</p>
+						<input id="lengthMinEnd" oninput="filterFunction()" type="number" min="0" max="99" value="99"> min <input id="lengthSecEnd" oninput="filterFunction()" type="number" min="0" max="59" value="59"> sec
 					</div>
 					<div style= "display: none" id="releaseDateDetails">
 						<h3>Release Date</h3>
@@ -2742,6 +2750,23 @@
 //Filtering
 //--------------
 		
+		var lengthMinStart = document.getElementById("lengthMinStart");
+		var lengthMinEnd = document.getElementById("lengthMinEnd");
+		var lengthSecStart = document.getElementById("lengthSecStart");
+		var lengthSecEnd = document.getElementById("lengthSecEnd");
+		function songLengthCheck(song){
+			var splitLength = song[iDuration].split(":");
+			var songMin = parseInt(splitLength[0]);
+			var songSec = parseInt(splitLength[1]);
+			var songTotalSec = songSec + (60 * songMin);
+			var minTotalSec = parseInt(lengthSecStart.value) + (60 * parseInt(lengthMinStart.value));
+			var maxTotalSec = parseInt(lengthSecEnd.value) + (60 * parseInt(lengthMinEnd.value));
+			if(songTotalSec <= minTotalSec || songTotalSec >= maxTotalSec){
+				return false;
+			}
+			return true;
+		}
+
 		var checkDateEarlier = document.getElementById("dateEarlier");
 		var checkDate1950 = document.getElementById("date1950");
 		var checkDate1960 = document.getElementById("date1960");
@@ -2877,7 +2902,7 @@
 				return false;
 			}
 
-			return searchKeyCheck(song) && lowerDiffCheck(song) && supportedInstrumentCheck(song) && genreCheck(song) && releaseDateCheck(song);
+			return searchKeyCheck(song) && lowerDiffCheck(song) && supportedInstrumentCheck(song) && genreCheck(song) && releaseDateCheck(song) && songLengthCheck(song);
 		}
 
 		function filterFunction() {
@@ -2938,6 +2963,10 @@
 			toggleElement(document.getElementById("toggleOptionsContainer"));
 		}
 		
+		function toggleSongLengthDetail(){
+			toggleElement(document.getElementById("songLengthDetails"));
+		}
+
 		function toggleBulkFavsDetail(){
 			toggleElement(document.getElementById("bulkFavsDetails"));
 		}
