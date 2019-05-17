@@ -23,7 +23,7 @@
 			font-size: 14px;
 		}
 
-		.resetButton {
+		.dangerButton {
 			background-color: rgb(155, 1, 1); /* Green */
 			border: none;
 			color: rgb(255, 255, 255);
@@ -185,16 +185,23 @@
 		<div id="optionsContainer">
 			<h3 style="background: #6668b4;" onclick="toggleSearchOptions()">Search Options</h3>
 			<div id="toggleOptionsContainer">
-				<input class="resetButton" type="button" id="resetButton" onClick="window.location.reload();" value="Reset Filters">
+				<input class="dangerButton" type="button" id="resetButton" onclick="window.location.reload();" value="Reset Filters">
 				<br>
 				<input class="button" type="button" id="sortButton" onclick="sortData()" value="Sort By Song">
 				<input class="button" type="button" id="onlyFavButton" onclick="filterFavorites()" value="Favs Only">
+				<input class="button" type="button" id="bulkFavsButton" onclick="toggleBulkFavsDetail()" value="Bulk Fav">
 				<input class="button" type="button" id="genreButton" onclick="toggleGenreDetail()" value="Genre">
 				<input class="button" type="button" id="lowerDiffButton" onclick="toggleLowerDiffDetail()" value="Lower Diffs">
 				<input class="button" type="button" id="releaseDateButton" onclick="toggleReleaseDateDetail()" value="Release Date">
 				<input class="button" type="button" id="supportedInstrumentsButton" onclick="toggleSupportedInstrumentsDetail()" value="Supported Instruments">
 				<br>
 				<div id="optionDetailsContainer">
+					<div style= "display: none" id="bulkFavsDetails">
+						<h3>Bulk Favorite</h3>
+						<p>Be Careful! These buttons will operate on ALL results below. Not just the ones on the current page!</p>
+						<input class="dangerButton" type="button" id="favAllButton" onclick="favAllFiltered();" value="Favorite All Filtered">
+						<input class="dangerButton" type="button" id="favAllButton" onclick="unFavAllFiltered();" value="Un-Favorite All Filtered">
+					</div>
 					<div style= "display: none" id="releaseDateDetails">
 						<h3>Release Date</h3>
 						<input type="checkbox" class="checkbox" onclick="selectAllReleaseDates()" id="selectAllReleaseDates" checked>
@@ -2931,6 +2938,10 @@
 			toggleElement(document.getElementById("toggleOptionsContainer"));
 		}
 		
+		function toggleBulkFavsDetail(){
+			toggleElement(document.getElementById("bulkFavsDetails"));
+		}
+
 		function toggleReleaseDateDetail(){
 			toggleElement(document.getElementById("releaseDateDetails"));
 		}
@@ -2992,6 +3003,47 @@
 
 			filterFunction();
 		}
+		
+		function favAllFiltered(){
+			for (i = 0; i < songData.length; i++) {
+				if (songData[i][iFiltered]) {
+					songData[i][iFav] = true;
+					addToFavList(i);
+				}
+			}
+			saveFavList();
+			resetBook();
+		}
+
+		function unFavAllFiltered(){
+			for (i = 0; i < songData.length; i++) {
+				if (songData[i][iFiltered]) {
+					songData[i][iFav] = false;
+					removeFromFavList(i);
+				}
+			}
+			saveFavList();
+			resetBook();
+		}
+		
+		function addToFavList(songIndex){
+			var songId = songData[songIndex][iId];
+			if(!favList.includes(songId)){
+				favList.push(songId);
+			}
+		}
+
+		function removeFromFavList(songIndex){
+			var songId = songData[songIndex][iId];
+			var index = favList.indexOf(songId);
+			if(index != -1){
+				favList.splice(index, 1);
+			}
+		}
+
+		function saveFavList(){
+			localStorage.setItem("favList", JSON.stringify(favList));
+		}
 
 		function favSong(favTarget)
 		{
@@ -3001,22 +3053,20 @@
 				favListNode = favListNode.parentNode;
 			}
 
-			var songId = songData[dataIndex][iId];
 			songData[dataIndex][iFav] = !songData[dataIndex][iFav];
 
 			if(songData[dataIndex][iFav]){
 				favListNode.className = "favSong";
-				if(!favList.includes(songId)) favList.push(songId);
+				addToFavList(dataIndex);
 			}
 			else {
 				favListNode.className = "unFavSong";
-				var index = favList.indexOf(songId);
-				if(index != -1) favList.splice(index, 1);
+				removeFromFavList(dataIndex);
 			}
 
-			favListNode.innerHTML = getSongHTML(dataIndex);
+			saveFavList();
 
-			localStorage.setItem("favList", JSON.stringify(favList));
+			favListNode.innerHTML = getSongHTML(dataIndex);
 		}
 
 
