@@ -13,7 +13,18 @@
 		}
 
 		.button {
-			background-color: #6668b4; /* Green */
+			background-color: #6668b4;
+			border: none;
+			color: white;
+			padding: 10px 8px;
+			margin: 5px;
+			text-align: center;
+			display: inline-block;
+			font-size: 14px;
+		}
+
+		.buttonToggled {
+			background-color: #929dff;
 			border: none;
 			color: white;
 			padding: 10px 8px;
@@ -24,7 +35,7 @@
 		}
 
 		.dangerButton {
-			background-color: rgb(155, 1, 1); /* Green */
+			background-color: #9b0101;
 			border: none;
 			color: rgb(255, 255, 255);
 			padding: 10px 8px;
@@ -37,7 +48,7 @@
 		.progressBar {
 			width: 10%;
 			height: 30px;
-			background-color: rgb(102, 104, 180);
+			background-color: #6668b4;
 			text-align: center;
 			line-height: 30px;
 			color: white; 
@@ -56,7 +67,7 @@
 
 		input[type=checkbox] + label:before {
 			content: "\2714";
-			background-color: rgb(231, 231, 231);
+			background-color: #e7e7e7;
 			display: inline-block;
 			width: 1em;
 			height: 1em;
@@ -188,8 +199,9 @@
 				<input class="dangerButton" type="button" id="resetButton" onclick="window.location.reload();" value="Reset Filters">
 				<br>
 				<input class="button" type="button" id="sortButton" onclick="sortData()" value="Sort By Song">
-				<input class="button" type="button" id="onlyFavButton" onclick="filterFavorites()" value="Favs Only">
+				<br>
 				<input class="button" type="button" id="bulkFavsButton" onclick="toggleBulkFavsDetail()" value="Bulk Fav">
+				<input class="button" type="button" id="onlyFavButton" onclick="filterFavorites()" value="Favs Only">
 				<input class="button" type="button" id="genreButton" onclick="toggleGenreDetail()" value="Genre">
 				<input class="button" type="button" id="lowerDiffButton" onclick="toggleLowerDiffDetail()" value="Lower Diffs">
 				<input class="button" type="button" id="releaseDateButton" onclick="toggleReleaseDateDetail()" value="Release Date">
@@ -203,12 +215,19 @@
 						<input class="dangerButton" type="button" id="favAllButton" onclick="favAllFiltered();" value="Favorite All Filtered">
 						<input class="dangerButton" type="button" id="favAllButton" onclick="unFavAllFiltered();" value="Un-Favorite All Filtered">
 					</div>
-					<div style= "display: none" id="songLengthDetails">
-						<h3>Song Length</h3>
-						<p>Between</p>
-						<input id="lengthMinStart" oninput="filterFunction()" type="number" min="0" max="99" value="0"> min <input id="lengthSecStart" oninput="filterFunction()" type="number" min="0" max="59" value="00"> sec
-						<p>and</p>
-						<input id="lengthMinEnd" oninput="filterFunction()" type="number" min="0" max="99" value="99"> min <input id="lengthSecEnd" oninput="filterFunction()" type="number" min="0" max="59" value="59"> sec
+					<div style= "display: none" id="genreDetails">
+						<h3>Genre</h3>
+						<input type="checkbox" class="checkbox" onclick="selectAllGenres()" id="selectAllGenres" checked>
+						<label for="selectAllGenres"><b>Select All</b></label>
+					</div>
+					<div style= "display: none" id="lowerDiffDetails">
+						<h3>Lower Difficulty Type</h3>
+						<input type="checkbox" class="checkbox" onclick="filterFunction()" id="diffAuthored">
+						<label for="diffAuthored">Authored</label>
+						<input type="checkbox" class="checkbox" onclick="filterFunction()" id="diffAuto">
+						<label for="diffAuto">Auto Generated</label>
+						<input type="checkbox" class="checkbox" onclick="filterFunction()" id="diffExpert">
+						<label for="diffExpert">Expert Only</label>
 					</div>
 					<div style= "display: none" id="releaseDateDetails">
 						<h3>Release Date</h3>
@@ -230,15 +249,13 @@
 						<label for="date2000">2000s</label>
 						<input type="checkbox" class="checkbox" onclick="filterFunction()" id="date2010" checked>
 						<label for="date2010">2010+</label>
-					</div>
-					<div style= "display: none" id="lowerDiffDetails">
-						<h3>Lower Difficulty Type</h3>
-						<input type="checkbox" class="checkbox" onclick="filterFunction()" id="diffAuthored">
-						<label for="diffAuthored">Authored</label>
-						<input type="checkbox" class="checkbox" onclick="filterFunction()" id="diffAuto">
-						<label for="diffAuto">Auto Generated</label>
-						<input type="checkbox" class="checkbox" onclick="filterFunction()" id="diffExpert">
-						<label for="diffExpert">Expert Only</label>
+						</div>
+					<div style= "display: none" id="songLengthDetails">
+						<h3>Song Length</h3>
+						<p>Between</p>
+						<input id="lengthMinStart" oninput="filterFunction()" type="number" min="0" max="99" value="0"> min <input id="lengthSecStart" oninput="filterFunction()" type="number" min="0" max="59" value="00"> sec
+						<p>and</p>
+						<input id="lengthMinEnd" oninput="filterFunction()" type="number" min="0" max="99" value="99"> min <input id="lengthSecEnd" oninput="filterFunction()" type="number" min="0" max="59" value="59"> sec
 					</div>
 					<div style= "display: none" id="supportedInstrumentsDetails">
 						<h3>Supported Instruments</h3>
@@ -254,12 +271,7 @@
 						<label for="hasKeys">Keys</label>
 						<input type="checkbox" class="checkbox" onclick="filterFunction()" id="hasProKeys">
 						<label for="hasProKeys">Pro Keys</label>
-					</div>
-					<div style= "display: none" id="genreDetails">
-						<h3>Genre</h3>
-						<input type="checkbox" class="checkbox" onclick="selectAllGenres()" id="selectAllGenres" checked>
-						<label for="selectAllGenres"><b>Select All</b></label>
-					</div>
+					</div>					
 				</div>
 			</div>
 		</div>
@@ -2517,6 +2529,48 @@
 [1967100047, "ZZ Top", "Sharp Dressed Man", "4:15", "2", "2", "4", "2", "2", "3", "Rock", "Eliminator", "3", "1983", "Masc."],
 [1019701639, "ZZ Top", "Got Me Under Pressure", "3:55", "4", "3", "4", "2", "2", "2", "Rock", "Eliminator", "2", "1983", "Masc."]];
 
+		function sortData(){
+			var temp = primaryIndex;
+			primaryIndex = secondaryIndex;
+			secondaryIndex = temp;
+
+			songData.sort(function(x,y) {
+				var xPri = x[primaryIndex].toLowerCase();
+				if (xPri.startsWith("the ")) xPri = xPri.slice(4);
+				var yPri = y[primaryIndex].toLowerCase();
+				if (yPri.startsWith("the ")) yPri = yPri.slice(4);
+				var xSec = x[secondaryIndex].toLowerCase();
+				if (xSec.startsWith("the ")) xSec = xSec.slice(4);
+				var ySec = y[secondaryIndex].toLowerCase();
+				if (ySec.startsWith("the ")) ySec = ySec.slice(4);
+
+				if(xPri < yPri){
+					return -1;
+				}
+				else if (xPri > yPri){
+					return 1;
+				}
+				else if(xSec < ySec){
+					return -1;
+				}
+				else if (xSec > ySec){
+					return 1;
+				}
+
+				return 0;
+			});
+
+			var button = document.getElementById("sortButton");
+			if(primaryIndex == iArtist){
+				button.value = "Sort By Song"
+			}
+			else{
+				button.value = "Sort By Artist"
+			}
+
+			filterFunction();
+		}
+
 //--------------
 //Page/Book
 //--------------
@@ -2618,9 +2672,6 @@
 			var numAdded = 0;
 			var intervalAddCount = 0;
 			var curIndex = 0;
-
-			currentPage = 1
-			possiblePages = 1;
 
 			songListContainer.innerHTML = "";
 			var pageControls = document.getElementsByName("controlsDiv");
@@ -2923,13 +2974,8 @@
 		var onlyFavorites = false;
 		function filterFavorites() {
 			onlyFavorites = !onlyFavorites;
-
-			var favButton = document.getElementById("onlyFavButton");
-			var buttonText = "Favs Only";
-			if(onlyFavorites){
-				buttonText = "All Songs";
-			}
-			favButton.value = buttonText;
+			
+			toggleButton(document.getElementById("onlyFavButton"));
 
 			filterFunction();
 		}
@@ -2950,6 +2996,15 @@
 			}
 			filterFunction();
 		}
+		
+		function toggleButton(buttonElem){
+			if(buttonElem.className == "button"){
+				buttonElem.className = "buttonToggled";
+			}
+			else{
+				buttonElem.className = "button";
+			}
+		}
 
 		function toggleElement(element){
 			if(element.style.display == "none"){
@@ -2964,75 +3019,39 @@
 		}
 		
 		function toggleSongLengthDetail(){
+			toggleButton(document.getElementById("songLengthButton"));
 			toggleElement(document.getElementById("songLengthDetails"));
 		}
 
 		function toggleBulkFavsDetail(){
+			toggleButton(document.getElementById("bulkFavsButton"));
 			toggleElement(document.getElementById("bulkFavsDetails"));
 		}
 
 		function toggleReleaseDateDetail(){
+			toggleButton(document.getElementById("releaseDateButton"));
 			toggleElement(document.getElementById("releaseDateDetails"));
 		}
 
 		function toggleGenreDetail(){
+			toggleButton(document.getElementById("genreButton"));
 			toggleElement(document.getElementById("genreDetails"));
 		}
 
 		function toggleLowerDiffDetail(){
+			toggleButton(document.getElementById("lowerDiffButton"));
 			toggleElement(document.getElementById("lowerDiffDetails"));
 		}
 
 		function toggleSupportedInstrumentsDetail(){
+			toggleButton(document.getElementById("supportedInstrumentsButton"));
 			toggleElement(document.getElementById("supportedInstrumentsDetails"));
 		}
 
 //--------------
-//Misc
+//Favorites
 //--------------
 
-		function sortData(){
-			var temp = primaryIndex;
-			primaryIndex = secondaryIndex;
-			secondaryIndex = temp;
-
-			songData.sort(function(x,y) {
-				var xPri = x[primaryIndex].toLowerCase();
-				if (xPri.startsWith("the ")) xPri = xPri.slice(4);
-				var yPri = y[primaryIndex].toLowerCase();
-				if (yPri.startsWith("the ")) yPri = yPri.slice(4);
-				var xSec = x[secondaryIndex].toLowerCase();
-				if (xSec.startsWith("the ")) xSec = xSec.slice(4);
-				var ySec = y[secondaryIndex].toLowerCase();
-				if (ySec.startsWith("the ")) ySec = ySec.slice(4);
-
-				if(xPri < yPri){
-					return -1;
-				}
-				else if (xPri > yPri){
-					return 1;
-				}
-				else if(xSec < ySec){
-					return -1;
-				}
-				else if (xSec > ySec){
-					return 1;
-				}
-
-				return 0;
-			});
-
-			var button = document.getElementById("sortButton");
-			if(primaryIndex == iArtist){
-				button.value = "Sort By Song"
-			}
-			else{
-				button.value = "Sort By Artist"
-			}
-
-			filterFunction();
-		}
-		
 		function favAllFiltered(){
 			for (i = 0; i < songData.length; i++) {
 				if (songData[i][iFiltered] && songData[i][iId] != 99999999) {
@@ -3097,8 +3116,6 @@
 
 			favListNode.innerHTML = getSongHTML(dataIndex);
 		}
-
-
 
 //--------------
 //Touch Controls
@@ -3177,6 +3194,7 @@
 		}
 		localStorage.setItem("favListVersion", favListVersion);
 
+		//Initial pass of song data. Mark favorites, mark all as filtered, collect available genres
 		var filteredCount = songData.length;
 		var availableGenres = [];
 		for (var i = 0; i < songData.length; i++) {
@@ -3193,14 +3211,15 @@
 				availableGenres.push(songData[i][iGenre]);
 			}
 		}
-
+		
+		//Fill out the genre details div with all available genres
 		var genreDetails = document.getElementById("genreDetails");
 		availableGenres.sort();
 		for(var i=0; i<availableGenres.length ; i++){
 			genreDetails.innerHTML += '<input type="checkbox" class="checkbox" onclick="filterFunction()" id="genre'+i+'" checked> \
 										<label for="genre'+i+'">'+availableGenres[i]+'</label>';
 		}
-
+		
 		var songsPerPage = 20;
 		var currentPage = 1;
 		var possiblePages = Math.ceil(1.0*filteredCount / songsPerPage);
@@ -3211,9 +3230,10 @@
     	songListContainer.addEventListener('touchmove', handleTouchMove, false);
     	songListContainer.addEventListener('touchend', handleTouchEnd, false);
 
+		//Initial sort of data (defaults to sorting by artist)
 		sortData();
 
 	</script>
-
+	
 </body>
 </html>
