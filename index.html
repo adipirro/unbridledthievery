@@ -2598,7 +2598,9 @@
 			var keys = songData[songIndex][iKeys];
 			var proKeys = songData[songIndex][iProKeys];
 			var vocals = songData[songIndex][iVocals];
-
+			
+			var youtubeSearchTerm = encodeURI(artist + " - " + songName);
+			
 			return starHTML + 
 				'<table> \
 					<tbody> \
@@ -2606,37 +2608,37 @@
 								<td colspan="2">' + artist + ' - ' + songName + '</td>  \
 						</tr> \
 						<tr> \
-								<td colspan="2" style="font-size: 14px;">' + album + ' &nbsp;|&nbsp; ' + genre + ' &nbsp;|&nbsp; ' + yearReleased + '</td> \
+								<td colspan="2" style="font-size: 14px;">' + album + ' &nbsp;|&nbsp; ' + genre + ' &nbsp;|&nbsp; ' + yearReleased + ' &nbsp;|&nbsp; ' + duration + '</td> \
 						</tr> \
 						<tr> \
-								<td style="font-size: 14px;">' + duration + '</td> \
+								<td style="font-size: 14px;"><a href="https://www.youtube.com/results?search_query='+youtubeSearchTerm+'" target="_blank"> YouTube </td> \
 						</tr> \
 						<tr><td></td></tr> \
 						<tr><td></td></tr> \
 						<tr><td></td></tr> \
 						<tr><td></td></tr> \
 						<tr> \
-								<td style="width:20%">Guitar</td> \
+								<td style="width:30%">Guitar</td> \
 								<td><img style="vertical-align: middle;" src="img/diff' + guitar + '.png"></td> \
 						</tr> \
 						<tr> \
-								<td style="width:20%">Bass</td> \
+								<td style="width:30%">Bass</td> \
 								<td><img style="vertical-align: middle;" src="img/diff' + bass + '.png"></td> \
 						</tr> \
 						<tr> \
-								<td style="width:20%">Drums</td> \
+								<td style="width:30%">Drums</td> \
 								<td><img style="vertical-align: middle;" src="img/diff' + drums + '.png"></td> \
 						</tr> \
 						<tr> \
-								<td style="width:20%">Keys</td> \
+								<td style="width:30%">Keys</td> \
 								<td><img style="vertical-align: middle;" src="img/diff' + keys + '.png"></td> \
 						</tr> \
 						<tr> \
-								<td style="width:20%">Pro Keys</td> \
+								<td style="width:30%">Pro Keys</td> \
 								<td><img style="vertical-align: middle;" src="img/diff' + proKeys + '.png"></td> \
 						</tr> \
 						<tr> \
-								<td style="width:20%">Vocals</td> \
+								<td style="width:30%">Vocals</td> \
 								<td><img style="vertical-align: middle;" src="img/diff' + vocals + '.png"></td> \
 						</tr> \
 					</tbody> \
@@ -2657,7 +2659,10 @@
 
 			item.innerHTML = getSongHTML(songIndex);
 
-			item.onclick = function() {
+			item.onclick = function(e) {
+				if(e.target.tagName == "A"){
+					return;
+				}
 				if(item.lastChild.tagName == "TABLE"){
 					item.innerHTML = getSongHTML(songIndex);
 				}else{
