@@ -196,9 +196,10 @@
 		<div id="optionsContainer">
 			<h3 style="background: #6668b4;" onclick="toggleSearchOptions()">Search Options</h3>
 			<div id="toggleOptionsContainer">
-				<input class="dangerButton" type="button" id="resetButton" onclick="window.location.reload();" value="Reset Filters">
-				<br>
 				<input class="button" type="button" id="sortButton" onclick="sortData()" value="Sort By Song">
+				<br>
+				<input class="dangerButton" type="button" id="resetButton" onclick="window.location.reload();" value="Reset Filters">
+				<input class="button" type="button" id="importExportButton" onclick="toggleImportExportDetail()" value="Import/Export">
 				<br>
 				<input class="button" type="button" id="bulkFavsButton" onclick="toggleBulkFavsDetail()" value="Bulk Fav">
 				<input class="button" type="button" id="onlyFavButton" onclick="filterFavorites()" value="Favs Only">
@@ -219,6 +220,11 @@
 						<h3>Genre</h3>
 						<input type="checkbox" class="checkbox" onclick="selectAllGenres()" id="selectAllGenres" checked>
 						<label for="selectAllGenres"><b>Select All</b></label>
+					</div>
+					<div style= "display: none" id="importExportDetails">
+						<h3>Import/Export Favorites</h3>
+						<input class="button" type="button" id="importButton" onclick="importFavFile();" value="Import">
+						<input class="button" type="button" id="exportButton" onclick="exportFavFile();" value="Export">
 					</div>
 					<div style= "display: none" id="lowerDiffDetails">
 						<h3>Lower Difficulty Type</h3>
@@ -3043,6 +3049,11 @@
 			toggleElement(document.getElementById("genreDetails"));
 		}
 
+		function toggleImportExportDetail(){
+			toggleButton(document.getElementById("importExportButton"));
+			toggleElement(document.getElementById("importExportDetails"));
+		}
+
 		function toggleLowerDiffDetail(){
 			toggleButton(document.getElementById("lowerDiffButton"));
 			toggleElement(document.getElementById("lowerDiffDetails"));
@@ -3096,6 +3107,85 @@
 
 		function saveFavList(){
 			localStorage.setItem("favList", JSON.stringify(favList));
+		}
+
+		var importFileInput;		
+		function importFavFile(){
+			importFileInput = document.createElement("input");
+			importFileInput.type = "file";
+			importFileInput.setAttribute("accept", ".txt");
+			importFileInput.addEventListener('change', importFileSelected);
+			importFileInput.click();
+		}
+
+		function importFileSelected(){
+			if(importFileInput.files.length == 0){
+				alert("No import file selected.");
+			}
+			var reader = new FileReader();
+			
+			reader.onload = function(e) {
+				var inputLines = reader.result.split("\r\n");
+				var newFavList = [];
+				if(inputLines[0] != favListVersion){
+					alert("Sorry, that is not a valid fav file");
+				}
+
+				for(var i=1; i<inputLines.length; i++){
+					var favLine = inputLines[i].split("\t");
+					var favId = parseInt(favLine[0]);
+					if(!isNaN(favId)){
+						newFavList.push(favId);
+					}
+				}
+
+				var added = 0;
+				var removed = 0;
+				var existing = 0;
+				for(var i=0; i<favList.length; i++){
+					if(newFavList.includes(favList[i])){
+						existing++;
+					}
+					else{
+						removed++;
+					}
+				}
+				
+				added = newFavList.length - existing;
+				
+				var apply = confirm("New: " + added + "\nRemoved: " + removed + "\nExisting: " + existing + "\n\nWould you like to import this file?");
+
+				if(apply){
+					favList = newFavList;
+					for (var i = 0; i < songData.length; i++) {
+						if(favList.includes(songData[i][iId])){
+							songData[i][iFav] = true;
+						}
+						else{
+							songData[i][iFav] = false;
+						}
+					}
+					saveFavList();
+					resetBook();
+				}
+			}
+
+			reader.readAsText(importFileInput.files[0]);
+		}
+
+		function exportFavFile(){
+			var outputTxt = favListVersion;
+
+			for (var i = 0; i < songData.length; i++) {
+				if(songData[i][iFav]){
+					outputTxt += "\r\n" + songData[i][iId] + "\t" + songData[i][iArtist] + " - " + songData[i][iSong];
+				}
+			}
+
+			var dlElem = document.createElement('a');
+			dlElem.setAttribute("href", "data:text/plain;charset=utf-8,"+encodeURIComponent(outputTxt));
+			dlElem.setAttribute("download", "unbridledfavs.txt");
+			dlElem.click();
 		}
 
 		function favSong(favTarget)
