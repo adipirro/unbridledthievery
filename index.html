@@ -209,6 +209,7 @@
 				<input class="button" type="button" id="releaseDateButton" onclick="toggleReleaseDateDetail()" value="Release Date">
 				<input class="button" type="button" id="songLengthButton" onclick="toggleSongLengthDetail()" value="Song Length">
 				<input class="button" type="button" id="vocalsGenderButton" onclick="toggleVocalsGenderDetail()" value="Vocals Gender">
+				<input class="button" type="button" id="initialsButton" onclick="toggleInitialsDetail()" value="Initials">
 				<input class="button" type="button" id="supportedInstrumentsButton" onclick="toggleSupportedInstrumentsDetail()" value="Supported Instruments">
 				<br>
 				<div id="optionDetailsContainer">
@@ -274,6 +275,11 @@
 						<input type="checkbox" class="checkbox" onclick="filterFunction()" id="genderNA" checked>
 						<label for="genderNA">N/A</label>
 					</div>
+					<div style= "display: none" id="initialsDetails">
+							<h3>Initials</h3>
+							<input type="checkbox" class="checkbox" onclick="selectAllInitials()" id="selectAllInitials" checked>
+							<label for="selectAllInitials"><b>Select All</b></label>
+						</div>
 					<div style= "display: none" id="supportedInstrumentsDetails">
 						<h3>Supported Instruments</h3>
 						<input type="checkbox" class="checkbox" onclick="filterFunction()" id="hasGuitar">
@@ -336,8 +342,9 @@
 		var iTrack = 12;
 		var iYearReleased = 13;
 		var iSinger = 14;
-		var iFiltered = 15;
-		var iFav = 16;
+		var iInitials = 15;
+		var iFiltered = 16;
+		var iFav = 17;
 		var primaryIndex = iSong;
 		var secondaryIndex = iArtist;
 		var songData = [[1962600045, "2Pac", "California Love (feat. Dr. Dre) (Auto)", "4:50", "3", "2", "2", "3", "3", "3", "Hip-Hop/Rap", "All Eyez on Me", "12", "1996", "Masc.", "SVG"],
@@ -1128,7 +1135,7 @@
 [1657300798, "John Mellencamp", "Lonely Ol' Night", "3:51", "4", "3", "4", "0", "0", "3", "Rock", "Scarecrow", "5", "1985", "Masc.", "SVG"],
 [1019701563, "John Mellencamp", "Rain on the Scarecrow", "3:51", "4", "2", "4", "0", "0", "4", "Rock", "Scarecrow", "1", "1985", "Masc.", "SVG"],
 [1715400184, "John Mellencamp", "Wild Night (feat. Me'shell Ndegeocello)", "3:31", "3", "4", "3", "0", "0", "3", "Rock", "Dance Naked", "4", "1994", "Masc.", "SVG"],
-[1011105013, "John Parr", "St. Elmo's Fire (Man in Motion)", "4:16", "4", "5", "2", "4", "4", "5", "Classic Rock", "St. Elmo s Fire: Original Motion Picture Soundtrack", "1", "1985", "Fem.", "ASS"],
+[1011105013, "John Parr", "St. Elmo's Fire (Man in Motion)", "4:16", "4", "5", "2", "4", "4", "5", "Classic Rock", "St. Elmo s Fire: Original Motion Picture Soundtrack", "1", "1985", "Fem.", "SVG"],
 [1180200115, "John Petrucci", "Jaws of Life (Auto)", "7:34", "7", "7", "7", "0", "0", "0", "Metal", "Suspended Animation", "1", "2005", "N/A", "APD"],
 [1180200135, "John Petrucci", "Glasgow Kiss (Auto)", "7:53", "0", "0", "7", "0", "0", "0", "Metal", "Suspended Animation", "2", "2005", "N/A", "APD"],
 [1180200136, "John Petrucci", "Damage Control (Auto)", "9:24", "0", "0", "6", "0", "0", "0", "Metal", "Suspended Animation", "4", "2005", "N/A", "APD"],
@@ -1984,7 +1991,7 @@
 [1074625252, "Shinedown", "Fly From The Inside", "3:59", "4", "4", "5", "0", "0", "5", "Rock", "Leave a Whisper", "1", "2003", "Masc.", "SVG"],
 [1194300120, "Shinedown", "I'm Alive (Auto)", "3:43", "5", "4", "4", "0", "0", "5", "Rock", "Avengers Assemble", "2", "2012", "Masc.", "SVG"],
 [1967100114, "Simon & Garfunkel", "Mrs. Robinson", "3:55", "1", "2", "5", "0", "0", "6", "Rock", "Bookends", "10", "1968", "Masc.", "APD"],
-[1011105012, "Simon & Garfunkel", "The Sounds of Silence", "3:09", "3", "1", "4", "0", "0", "3", "Classic Rock", "Sounds of Silence", "1", "1966", "Fem.", "ASS"],
+[1011105012, "Simon & Garfunkel", "The Sounds of Silence", "3:09", "3", "1", "4", "0", "0", "3", "Classic Rock", "Sounds of Silence", "1", "1966", "Fem.", "SVG"],
 [1011105036, "Sinead O'Connor", "Nothing Compares 2 U", "4:52", "3", "0", "1", "2", "2", "6", "Pop-Rock", "I Do Not Want What I Haven't Got", "6", "1990", "Fem.", "OWL"],
 [2047000272, "Siouxsie and The Banshees", "Dear Prudence", "3:38", "2", "2", "3", "2", "2", "3", "Pop-Rock", "Hy�na", "6", "1984", "Fem.", "OWL"],
 [1074603726, "Sir Mix-a-Lot", "Baby Got Back (Auto)", "4:17", "3", "5", "3", "0", "0", "3", "Hip-Hop/Rap", "Mack Daddy", "3", "1992", "Masc.", "SVG"],
@@ -2603,6 +2610,7 @@
 			var keys = songData[songIndex][iKeys];
 			var proKeys = songData[songIndex][iProKeys];
 			var vocals = songData[songIndex][iVocals];
+			var initials = songData[songIndex][iInitials]
 			
 			var youtubeSearchTerm = encodeURI(artist + " - " + songName);
 			
@@ -2617,6 +2625,9 @@
 						</tr> \
 						<tr> \
 								<td style="font-size: 14px;"><a href="https://www.youtube.com/results?search_query='+youtubeSearchTerm+'" target="_blank"> YouTube </td> \
+						</tr> \
+						<tr> \
+								<td colspan="2" style="font-size: 12px;">' + initials + '</td> \
 						</tr> \
 						<tr><td></td></tr> \
 						<tr><td></td></tr> \
@@ -2879,6 +2890,18 @@
 			return true;
 		}
 
+		function initialsCheck(song){
+			var checkedInitials = initialsDetails.getElementsByTagName("input");
+			for(var i=1; i<checkedInitials.length; i++){
+				if(!checkedInitials[i].checked){
+					if(song[iInitials] == availableInitials[i-1]){
+						return false;
+					}
+				}
+			}
+			return true;
+		}
+
 		var checkGenderMale = document.getElementById("genderMale");
 		var checkGenderFemale = document.getElementById("genderFemale");
 		var checkGenderNA = document.getElementById("genderNA");
@@ -2980,7 +3003,7 @@
 				return false;
 			}
 
-			return searchKeyCheck(song) && lowerDiffCheck(song) && supportedInstrumentCheck(song) && genreCheck(song) && releaseDateCheck(song) && songLengthCheck(song) && vocalsGenderCheck(song);
+			return searchKeyCheck(song) && lowerDiffCheck(song) && supportedInstrumentCheck(song) && genreCheck(song) && releaseDateCheck(song) && songLengthCheck(song) && vocalsGenderCheck(song) && initialsCheck(song);
 		}
 
 		function filterFunction() {
@@ -3020,6 +3043,14 @@
 			var checkedGenres = genreDetails.getElementsByTagName("input");
 			for(var i=1; i<checkedGenres.length; i++){
 				checkedGenres[i].checked = checkedGenres[0].checked;
+			}
+			filterFunction();
+		}
+
+		function selectAllInitials(){
+			var checkedInitials = initialsDetails.getElementsByTagName("input");
+			for(var i=1; i<checkedInitials.length; i++){
+				checkedInitials[i].checked = checkedInitials[0].checked;
 			}
 			filterFunction();
 		}
@@ -3068,6 +3099,11 @@
 		function toggleGenreDetail(){
 			toggleButton(document.getElementById("genreButton"));
 			toggleElement(document.getElementById("genreDetails"));
+		}
+
+		function toggleInitialsDetail(){
+			toggleButton(document.getElementById("initialsButton"));
+			toggleElement(document.getElementById("initialsDetails"));
 		}
 
 		function toggleImportExportDetail(){
@@ -3313,6 +3349,7 @@
 		//Initial pass of song data. Mark favorites, mark all as filtered, collect available genres
 		var filteredCount = songData.length;
 		var availableGenres = [];
+		var availableInitials = [];
 		for (var i = 0; i < songData.length; i++) {
 			songData[i][iFiltered] = true;
 
@@ -3326,6 +3363,10 @@
 			if(availableGenres.indexOf(songData[i][iGenre]) == -1){
 				availableGenres.push(songData[i][iGenre]);
 			}
+
+			if(availableInitials.indexOf(songData[i][iInitials]) == -1){
+				availableInitials.push(songData[i][iInitials]);
+			}
 		}
 		
 		//Fill out the genre details div with all available genres
@@ -3334,6 +3375,14 @@
 		for(var i=0; i<availableGenres.length ; i++){
 			genreDetails.innerHTML += '<input type="checkbox" class="checkbox" onclick="filterFunction()" id="genre'+i+'" checked> \
 										<label for="genre'+i+'">'+availableGenres[i]+'</label>';
+		}
+
+		//Fill out the initials details div with all available initials
+		var initialsDetails = document.getElementById("initialsDetails");
+		availableInitials.sort();
+		for(var i=0; i<availableInitials.length ; i++){
+			initialsDetails.innerHTML += '<input type="checkbox" class="checkbox" onclick="filterFunction()" id="initials'+i+'" checked> \
+										<label for="initials'+i+'">'+availableInitials[i]+'</label>';
 		}
 		
 		var songsPerPage = 20;
