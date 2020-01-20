@@ -196,17 +196,19 @@
 		<div id="optionsContainer">
 			<h3 style="background: #6668b4;" onclick="toggleSearchOptions()">Search Options</h3>
 			<div id="toggleOptionsContainer">
+				<input class="dangerButton" type="button" id="resetButton" onclick="window.location.reload();" value="Reset Filters">
+				<br>
 				<input class="button" type="button" id="sortButton" onclick="sortData()" value="Sort By Song">
 				<br>
-				<input class="dangerButton" type="button" id="resetButton" onclick="window.location.reload();" value="Reset Filters">
 				<input class="button" type="button" id="importExportButton" onclick="toggleImportExportDetail()" value="Import/Export">
-				<br>
 				<input class="button" type="button" id="bulkFavsButton" onclick="toggleBulkFavsDetail()" value="Bulk Fav">
+				<br>
 				<input class="button" type="button" id="onlyFavButton" onclick="filterFavorites()" value="Favs Only">
 				<input class="button" type="button" id="genreButton" onclick="toggleGenreDetail()" value="Genre">
 				<input class="button" type="button" id="lowerDiffButton" onclick="toggleLowerDiffDetail()" value="Lower Diffs">
 				<input class="button" type="button" id="releaseDateButton" onclick="toggleReleaseDateDetail()" value="Release Date">
 				<input class="button" type="button" id="songLengthButton" onclick="toggleSongLengthDetail()" value="Song Length">
+				<input class="button" type="button" id="vocalsGenderButton" onclick="toggleVocalsGenderDetail()" value="Vocals Gender">
 				<input class="button" type="button" id="supportedInstrumentsButton" onclick="toggleSupportedInstrumentsDetail()" value="Supported Instruments">
 				<br>
 				<div id="optionDetailsContainer">
@@ -262,6 +264,15 @@
 						<input id="lengthMinStart" oninput="filterFunction()" type="number" min="0" max="99" value="0"> min <input id="lengthSecStart" oninput="filterFunction()" type="number" min="0" max="59" value="00"> sec
 						<p>and</p>
 						<input id="lengthMinEnd" oninput="filterFunction()" type="number" min="0" max="99" value="99"> min <input id="lengthSecEnd" oninput="filterFunction()" type="number" min="0" max="59" value="59"> sec
+					</div>
+					<div style= "display: none" id="vocalsGenderDetails">
+						<h3>Vocals Gender</h3>
+						<input type="checkbox" class="checkbox" onclick="filterFunction()" id="genderMale" checked>
+						<label for="genderMale">Male</label>
+						<input type="checkbox" class="checkbox" onclick="filterFunction()" id="genderFemale" checked>
+						<label for="genderFemale">Female</label>
+						<input type="checkbox" class="checkbox" onclick="filterFunction()" id="genderNA" checked>
+						<label for="genderNA">N/A</label>
 					</div>
 					<div style= "display: none" id="supportedInstrumentsDetails">
 						<h3>Supported Instruments</h3>
@@ -2867,6 +2878,23 @@
 			return true;
 		}
 
+		var checkGenderMale = document.getElementById("genderMale");
+		var checkGenderFemale = document.getElementById("genderFemale");
+		var checkGenderNA = document.getElementById("genderNA");
+		function vocalsGenderCheck(song){
+			var songVocalsGender = song[iSinger];
+			if(!checkGenderMale.checked && songVocalsGender == "Masc."){
+				return false;
+			}
+			if(!checkGenderFemale.checked && songVocalsGender == "Fem."){
+				return false;
+			}
+			if(!checkGenderNA.checked && songVocalsGender == "N/A"){
+				return false;
+			}
+			return true;
+		}
+
 		var checkHasGuitar = document.getElementById("hasGuitar");
 		var checkHasBass = document.getElementById("hasBass");
 		var checkHasDrums = document.getElementById("hasDrums");
@@ -2951,7 +2979,7 @@
 				return false;
 			}
 
-			return searchKeyCheck(song) && lowerDiffCheck(song) && supportedInstrumentCheck(song) && genreCheck(song) && releaseDateCheck(song) && songLengthCheck(song);
+			return searchKeyCheck(song) && lowerDiffCheck(song) && supportedInstrumentCheck(song) && genreCheck(song) && releaseDateCheck(song) && songLengthCheck(song) && vocalsGenderCheck(song);
 		}
 
 		function filterFunction() {
@@ -3019,6 +3047,11 @@
 		function toggleSongLengthDetail(){
 			toggleButton(document.getElementById("songLengthButton"));
 			toggleElement(document.getElementById("songLengthDetails"));
+		}
+
+		function toggleVocalsGenderDetail(){
+			toggleButton(document.getElementById("vocalsGenderButton"));
+			toggleElement(document.getElementById("vocalsGenderDetails"));
 		}
 
 		function toggleBulkFavsDetail(){
