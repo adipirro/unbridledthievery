@@ -88,10 +88,14 @@
 		.progressBar {
 			width: 10%;
 			height: 30px;
-			background-color: #6668b4;
+			background: rgb(166,36,0);
+			background: -moz-linear-gradient(0deg, rgba(166,36,0,1) 0%, rgba(255,210,82,1) 50%, rgba(166,36,0,1) 100%);
+			background: -webkit-linear-gradient(0deg, rgba(166,36,0,1) 0%, rgba(255,210,82,1) 50%, rgba(166,36,0,1) 100%);
+			background: linear-gradient(0deg, rgba(166,36,0,1) 0%, rgba(255,210,82,1) 50%, rgba(166,36,0,1) 100%);
+			filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#a62400",endColorstr="#a62400",GradientType=1);
 			text-align: center;
 			line-height: 30px;
-			color: white; 
+			color: rgb(54, 54, 54);
 		}
 
 		input[type=checkbox] + label {
