@@ -6,14 +6,23 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>RB Song Selection</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<style>
+	<link href="https://fonts.googleapis.com/css?family=New+Rocker&display=swap" rel="stylesheet">
+<style>
 		* {
 		box-sizing: border-box;
-		font-family: Arial, Helvetica, sans-serif;
+		font-family: 'New Rocker', cursive;
 		}
 
+		/* body {
+			background: url(https://wallpapercave.com/wp/wp3404445.jpg);
+		} */
+
 		.button {
-			background-color: #6668b4;
+			background: rgb(94,94,94);
+			background: -moz-radial-gradient(circle, rgba(94,94,94,1) 0%, rgba(0,0,0,0.76234243697479) 66%, rgba(0,0,0,0.76234243697479) 100%);
+			background: -webkit-radial-gradient(circle, rgba(94,94,94,1) 0%, rgba(0,0,0,0.76234243697479) 66%, rgba(0,0,0,0.76234243697479) 100%);
+			background: radial-gradient(circle, rgba(94,94,94,1) 0%, rgba(0,0,0,0.76234243697479) 66%, rgba(0,0,0,0.76234243697479) 100%);
+			filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#5e5e5e",endColorstr="#000000",GradientType=1);
 			border: none;
 			color: white;
 			padding: 10px 8px;
@@ -21,21 +30,33 @@
 			text-align: center;
 			display: inline-block;
 			font-size: 14px;
+			border-radius: 18px;
+			width: 200px;
 		}
 
 		.buttonToggled {
-			background-color: #929dff;
+			background: rgb(166,36,0);
+			background: -moz-linear-gradient(0deg, rgba(166,36,0,1) 0%, rgba(255,210,82,1) 50%, rgba(166,36,0,1) 100%);
+			background: -webkit-linear-gradient(0deg, rgba(166,36,0,1) 0%, rgba(255,210,82,1) 50%, rgba(166,36,0,1) 100%);
+			background: linear-gradient(0deg, rgba(166,36,0,1) 0%, rgba(255,210,82,1) 50%, rgba(166,36,0,1) 100%);
+			filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#a62400",endColorstr="#a62400",GradientType=1);
 			border: none;
-			color: white;
+			color: rgb(54, 54, 54);
 			padding: 10px 8px;
 			margin: 5px;
 			text-align: center;
 			display: inline-block;
 			font-size: 14px;
+			border-radius: 18px;
+			width: 200px;
 		}
 
 		.dangerButton {
-			background-color: #9b0101;
+			background: rgb(153,93,93);
+			background: -moz-radial-gradient(circle, rgba(153,93,93,0.7847514005602241) 0%, rgba(155,1,1,1) 80%);
+			background: -webkit-radial-gradient(circle, rgba(153,93,93,0.7847514005602241) 0%, rgba(155,1,1,1) 80%);
+			background: radial-gradient(circle, rgba(153,93,93,0.7847514005602241) 0%, rgba(155,1,1,1) 80%);
+			filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#995d5d",endColorstr="#9b0101",GradientType=1);
 			border: none;
 			color: rgb(255, 255, 255);
 			padding: 10px 8px;
@@ -43,6 +64,25 @@
 			text-align: center;
 			display: inline-block;
 			font-size: 14px;
+			border-radius: 18px;
+			width: 200px;
+		}
+
+		.navButton {
+			background: rgb(94,94,94);
+			background: -moz-radial-gradient(circle, rgba(94,94,94,1) 0%, rgba(0,0,0,0.76234243697479) 51%, rgba(0,0,0,0.8799894957983193) 100%);
+			background: -webkit-radial-gradient(circle, rgba(94,94,94,1) 0%, rgba(0,0,0,0.76234243697479) 51%, rgba(0,0,0,0.8799894957983193) 100%);
+			background: radial-gradient(circle, rgba(94,94,94,1) 0%, rgba(0,0,0,0.76234243697479) 51%, rgba(0,0,0,0.8799894957983193) 100%);
+			filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#5e5e5e",endColorstr="#000000",GradientType=1);
+			border: none;
+			color: white;
+			padding: 10px 8px;
+			margin: 5px;
+			text-align: center;
+			display: inline-block;
+			font-size: 14px;
+			border-radius: 18px;
+			width: 100px;
 		}
 
 		.progressBar {
@@ -83,8 +123,12 @@
 		}
 
 		input[type=checkbox]:checked + label:before {
-			background-color: #929dff;
-			color: #fff;
+			background: rgb(166,36,0);
+			background: -moz-linear-gradient(0deg, rgba(166,36,0,1) 0%, rgba(255,210,82,1) 50%, rgba(166,36,0,1) 100%);
+			background: -webkit-linear-gradient(0deg, rgba(166,36,0,1) 0%, rgba(255,210,82,1) 50%, rgba(166,36,0,1) 100%);
+			background: linear-gradient(0deg, rgba(166,36,0,1) 0%, rgba(255,210,82,1) 50%, rgba(166,36,0,1) 100%);
+			filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#a62400",endColorstr="#a62400",GradientType=1);
+			color: rgb(54, 54, 54);
 		}
 
 		input[type=checkbox]:disabled + label:before {
@@ -108,12 +152,28 @@
 		.pageContainer {
 			max-width: 500px;
 		}
-
-		#optionsContainer {
-			background: #b3b3b3;
+		
+		#inputContainer {
+			/* background: #b3b3b3c4; */
 			text-align: center;
 			padding-bottom: 10px;
 			display: "none";
+		}
+
+		#optionsContainer {
+			background: #b3b3b3c4;
+			text-align: center;
+			padding-bottom: 10px;
+			display: "none";
+		}
+
+		#optionsContainerHeader {
+			background: rgb(210,70,0);
+			background: -moz-linear-gradient(0deg, rgba(210,70,0,0.7399334733893557) 0%, rgba(254,195,68,0.7259278711484594) 49%, rgba(210,70,0,0.7091211484593838) 100%);
+			background: -webkit-linear-gradient(0deg, rgba(210,70,0,0.7399334733893557) 0%, rgba(254,195,68,0.7259278711484594) 49%, rgba(210,70,0,0.7091211484593838) 100%);
+			background: linear-gradient(0deg, rgba(210,70,0,0.7399334733893557) 0%, rgba(254,195,68,0.7259278711484594) 49%, rgba(210,70,0,0.7091211484593838) 100%);
+			filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#d24600",endColorstr="#d24600",GradientType=1);
+			text-align: center;
 		}
 
 		#optionDetailsContainer {
@@ -142,17 +202,24 @@
 			appearance: none;
 			width: 25px;
 			height: 25px;
-			background: #7190f7;
+			background: rgb(166,36,0);
+			background: -moz-linear-gradient(0deg, rgba(166,36,0,1) 0%, rgba(255,210,82,1) 50%, rgba(166,36,0,1) 100%);
+			background: -webkit-linear-gradient(0deg, rgba(166,36,0,1) 0%, rgba(255,210,82,1) 50%, rgba(166,36,0,1) 100%);
+			background: linear-gradient(0deg, rgba(166,36,0,1) 0%, rgba(255,210,82,1) 50%, rgba(166,36,0,1) 100%);
+			filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#a62400",endColorstr="#a62400",GradientType=1);
 			cursor: pointer;
 		}
 
 		.pageSlider::-moz-range-thumb {
 			width: 25px;
 			height: 25px;
-			background: #7190f7;
+			background: rgb(166,36,0);
+			background: -moz-linear-gradient(0deg, rgba(166,36,0,1) 0%, rgba(255,210,82,1) 50%, rgba(166,36,0,1) 100%);
+			background: -webkit-linear-gradient(0deg, rgba(166,36,0,1) 0%, rgba(255,210,82,1) 50%, rgba(166,36,0,1) 100%);
+			background: linear-gradient(0deg, rgba(166,36,0,1) 0%, rgba(255,210,82,1) 50%, rgba(166,36,0,1) 100%);
+			filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#a62400",endColorstr="#a62400",GradientType=1);
 			cursor: pointer;
 		}
-
 		#songList {
 			list-style-type: none;
 			padding: 0;
@@ -173,20 +240,26 @@
 		.favSong{
 			border: 1px solid #ddd;
 			margin-top: -1px; /* Prevent double borders */
-			background-color: #929dff;
+			background: rgb(210,70,0);
+			background: -moz-linear-gradient(0deg, rgba(210,70,0,0.7399334733893557) 0%, rgba(254,195,68,0.7259278711484594) 49%, rgba(210,70,0,0.7091211484593838) 100%);
+			background: -webkit-linear-gradient(0deg, rgba(210,70,0,0.7399334733893557) 0%, rgba(254,195,68,0.7259278711484594) 49%, rgba(210,70,0,0.7091211484593838) 100%);
+			background: linear-gradient(0deg, rgba(210,70,0,0.7399334733893557) 0%, rgba(254,195,68,0.7259278711484594) 49%, rgba(210,70,0,0.7091211484593838) 100%);
+			filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#d24600",endColorstr="#d24600",GradientType=1);
 			padding: 12px;
 			font-size: 20px;
 			color: black;
 			display: block
 		}
 
-		.unFavSong li:hover {
+		/* .unFavSong li:hover {
 			background-color: #eee;
 		}
 
 		.favSong li:hover {
 			background-color: #5d66bb;
-		}
+		} */
+
+
 	</style>
 </head>
 
@@ -194,7 +267,7 @@
 
 	<div id="inputContainer" class="pageContainer">
 		<div id="optionsContainer">
-			<h3 style="background: #6668b4;" onclick="toggleSearchOptions()">Search Options</h3>
+			<h3 id="optionsContainerHeader" onclick="toggleSearchOptions()">Search Options</h3>
 			<div id="toggleOptionsContainer">
 				<input class="dangerButton" type="button" id="resetButton" onclick="window.location.reload();" value="Reset Filters">
 				<br>
@@ -306,22 +379,22 @@
 			<br>
 			<br>
 			<span name="pageNum">1</span> / <span name="possiblePages">1</span>
-			<input class="button" type="button" name="prevButton"onclick="prevPage()" value="Prev">
-			<input class="button" type="button" name="nextButton"onclick="nextPage()" value="Next">
-			<input class="button" type="button" name="loadAllButton" onclick="loadAll()" value="Load All">
+			<input class="navButton" type="button" name="prevButton"onclick="prevPage()" value="Prev">
+			<input class="navButton" type="button" name="nextButton"onclick="nextPage()" value="Next">
+			<input class="navButton" type="button" name="loadAllButton" onclick="loadAll()" value="Load All">
 			<br>		
 			<input name="pageSlider" class="pageSlider" type="range" min="1" max="1" step="1" oninput="loadPage(this.value)">
 		</div>
-		
+
 		<ul id="songList"></ul>
 
 		<div name="controlsDiv">
 			<br>
 			<input name="pageSlider" class="pageSlider" type="range" min="1" max="1" step="1" oninput="loadPage(this.value)">
 			<span name="pageNum">1</span> / <span name="possiblePages">1</span>
-			<input class="button" type="button" onclick="prevPage()" value="Prev">
-			<input class="button" type="button" onclick="nextPage()" value="Next">
-			<input class="button" type="button" name="loadAllButton" onclick="loadAll()" value="Load All">
+			<input class="navButton" type="button" onclick="prevPage()" value="Prev">
+			<input class="navButton" type="button" onclick="nextPage()" value="Next">
+			<input class="navButton" type="button" name="loadAllButton" onclick="loadAll()" value="Load All">
 		</div>		
 	</div>
 
